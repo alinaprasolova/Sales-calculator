@@ -44,6 +44,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* Логотип слева наверху, размер еще меньше */
         .rk-header {
             max-width: 860px;
             margin: 0 auto 24px;
@@ -51,8 +52,7 @@
             align-items: center;
             justify-content: flex-start;
         }
-
-        .rk-logo-img { height: 20px; width: auto; display: block; }
+        .rk-logo-img { height: 16px; width: auto; display: block; } 
 
         .container {
             max-width: 860px;
@@ -64,8 +64,8 @@
             min-height: calc(100vh - 100px);
         }
 
-        /* Выровняли заголовок по левому краю */
-        .calc-title { text-align: left; margin-bottom: 32px; }
+        /* Заголовок по центру */
+        .calc-title { text-align: center; margin-bottom: 32px; }
         .calc-title h1 { font-size: 28px; font-weight: 700; color: var(--rk-dark); letter-spacing: -0.5px; line-height: 1.25; margin-bottom: 8px; }
         .calc-title p { font-size: 15px; color: var(--rk-text-muted); }
 
@@ -89,8 +89,8 @@
         input[type="number"]:focus { outline: none; border-color: var(--rk-blue); background: var(--rk-white); box-shadow: 0 0 0 3px rgba(82, 95, 251, 0.12); }
         input.error-field { border-color: var(--rk-danger) !important; background-color: var(--rk-danger-bg) !important; }
 
-        /* Выровняли кнопку по левому краю */
-        .btn-calc-wrapper { display: flex; justify-content: flex-start; margin: 24px 0 32px; }
+        /* Кнопка расчета по центру */
+        .btn-calc-wrapper { display: flex; justify-content: center; margin: 24px 0 32px; }
         .btn-calc { width: 100%; max-width: 320px; background-color: var(--rk-blue); color: var(--rk-white); border: none; padding: 16px; font-size: 16px; font-weight: 600; border-radius: var(--rk-radius-sm); cursor: pointer; box-shadow: 0 4px 12px rgba(82, 95, 251, 0.3); transition: all 0.2s ease; }
         .btn-calc:hover { background-color: var(--rk-blue-hover); transform: translateY(-2px); }
 
@@ -110,11 +110,12 @@
         .profit-main { font-size: 22px; font-weight: 700; }
         .profit-year { font-size: 15px; font-weight: 500; margin-top: 6px; opacity: 0.9; }
 
-        /* Выровняли нижнюю кнопку PDF тоже по левому краю */
-        .export-actions { display: flex; justify-content: flex-start; margin-top: 24px; }
+        /* Кнопка экспорта по центру */
+        .export-actions { display: flex; justify-content: center; margin-top: 24px; }
         .btn-export { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 24px; font-size: 15px; font-weight: 600; border-radius: var(--rk-radius-sm); cursor: pointer; transition: all 0.2s ease; border: 1.5px solid var(--rk-blue); background: transparent; color: var(--rk-blue); max-width: 320px; width: 100%; }
         .btn-export:hover { background-color: var(--rk-blue-light); }
 
+        /* ─── ПРАВИЛО ДЛЯ ЭКРАНА: СКРЫТЬ ПОДВАЛ ─── */
         @media screen {
             .print-only-footer {
                 display: none !important;
@@ -123,7 +124,7 @@
 
         @media (max-width: 640px) {
             body { padding: 20px 16px; }
-            .rk-logo-img { height: 16px; }
+            .rk-logo-img { height: 12px; } /* Крошечный логотип для мобилок */
             .calc-title h1 { font-size: 24px; }
             .section, .col-card, .results-section { padding: 20px 16px; }
             .grid-2, .grid-2-col { grid-template-columns: 1fr; gap: 12px; }
@@ -132,6 +133,7 @@
             .profit-main { font-size: 18px; }
         }
 
+        /* ─── МАГИЯ ДЛЯ ИДЕАЛЬНОГО ПЕЧАТНОГО PDF ─── */
         @media print {
             @page { size: A4 portrait; margin: 8mm; }
             
@@ -141,8 +143,8 @@
             .no-print, .btn-calc-wrapper, .export-actions { display: none !important; }
             
             .rk-header { margin-bottom: 12px !important; }
-            .rk-logo-img { height: 18px !important; }
-            .calc-title { margin-bottom: 16px !important; text-align: left !important; }
+            .rk-logo-img { height: 16px !important; }
+            .calc-title { margin-bottom: 16px !important; }
             .calc-title h1 { font-size: 20px !important; margin-bottom: 4px !important; }
             .calc-title p { font-size: 12px !important; margin-bottom: 0 !important; }
             
@@ -171,15 +173,24 @@
             
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
+            /* ─── ПРАВИЛО ДЛЯ ПЕЧАТИ: ОФИЦИАЛЬНЫЙ БЛАНК (РЕКВИЗИТЫ) ─── */
             .print-only-footer {
-                display: block !important;
-                text-align: center !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: flex-start !important;
+                font-size: 10px !important;
                 color: var(--rk-text-muted) !important;
-                font-size: 14px !important;
-                font-weight: 500 !important;
-                margin-top: auto !important; 
-                padding: 20px 0 10px 0 !important;
+                margin-top: auto !important; /* Прижимает текст к самому низу листа А4 */
+                padding-top: 12px !important;
+                border-top: 1px solid var(--rk-border) !important;
+                text-align: left !important;
+                line-height: 1.4 !important;
             }
+            
+            .footer-col { flex: 1 !important; }
+            .footer-col.center { text-align: center !important; }
+            .footer-col.right { text-align: right !important; }
+            .footer-col strong { color: var(--rk-text) !important; font-size: 11px !important; }
         }
     </style>
 </head>
@@ -314,7 +325,18 @@
         </div>
         
         <div class="print-only-footer">
-            robokassa.com
+            <div class="footer-col">
+                <strong>ООО «РОБОКАССА»</strong><br>
+                5047063929 / 771601001
+            </div>
+            <div class="footer-col center">
+                115054, г. Москва,<br>
+                Стремянный переулок д. 26
+            </div>
+            <div class="footer-col right">
+                8 (499) 110-57-25<br>
+                robokassa.com
+            </div>
         </div>
 
     </div>
