@@ -40,11 +40,13 @@
 
         .container { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; }
 
-        .rk-header { display: flex; justify-content: flex-start; margin-bottom: 24px; }
-        .rk-logo { height: 16px; width: auto; }
+        /* Логотип ВСЕГДА СЛЕВА */
+        .rk-header { display: flex; justify-content: flex-start; margin-bottom: 24px; width: 100%; }
+        .rk-logo { height: 16px; width: auto; display: block; }
 
-        .calc-title { text-align: center; margin-bottom: 32px; }
-        .calc-title h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        /* Заголовок ПО ЦЕНТРУ */
+        .calc-title { text-align: center; margin-bottom: 32px; width: 100%; }
+        .calc-title h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--rk-dark); }
         .calc-title p { font-size: 15px; color: var(--rk-muted); }
 
         .section { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 28px; margin-bottom: 16px; }
@@ -62,7 +64,8 @@
         label { display: block; font-size: 11px; font-weight: 500; color: var(--rk-muted); margin-bottom: 6px; }
         input { width: 100%; padding: 10px; border: 1.5px solid var(--rk-border); border-radius: 8px; background: var(--rk-bg); font-family: var(--rk-font); font-size: 14px; font-weight: 500; }
 
-        .btn-wrap { display: flex; justify-content: center; margin: 24px 0; }
+        /* Кнопки ПО ЦЕНТРУ */
+        .btn-wrap { display: flex; justify-content: center; width: 100%; margin: 24px 0; }
         .btn-main { width: 100%; max-width: 300px; background: var(--rk-blue); color: #fff; border: none; padding: 15px; font-size: 16px; font-weight: 600; border-radius: 10px; cursor: pointer; }
 
         .results { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 28px; }
@@ -82,9 +85,10 @@
         @media (max-width: 640px) {
             .grid-inputs, .grid-cards { grid-template-columns: 1fr; }
             .rk-logo { height: 14px; }
+            .calc-title h1 { font-size: 24px; }
         }
 
-        /* ─── НОВАЯ ЛОГИКА ДЛЯ ПЕЧАТИ ─── */
+        /* ─── УЛЬТРА-ОПТИМИЗАЦИЯ ПОД 1 ЛИСТ ─── */
         @media print {
             @page { size: A4 portrait; margin: 8mm; }
             body { background: white !important; padding: 0 !important; margin: 0 !important; }
@@ -92,24 +96,25 @@
             
             .container { 
                 max-width: 100% !important; 
-                min-height: 275mm !important; /* Высота почти во весь лист */
+                height: 275mm !important; /* Высота листа */
                 display: flex !important;
                 flex-direction: column !important;
+                transform: scale(0.92); /* Принудительно вжимаем в 1 лист */
+                transform-origin: top center;
             }
 
             .section, .card, .results { 
                 box-shadow: none !important; 
                 border: 1px solid #E2E7F1 !important; 
-                margin-bottom: 12px !important;
+                margin-bottom: 8px !important;
+                padding: 18px !important;
             }
 
-            /* Футер отталкивается вниз через margin-top: auto */
             .print-footer { 
                 display: flex !important; 
                 justify-content: space-between; 
                 margin-top: auto !important; 
-                padding-top: 20px; 
-                padding-bottom: 10px;
+                padding-top: 15px; 
                 border-top: 1px solid #E2E7F1; 
                 font-size: 10px; 
                 color: #6B7394; 
