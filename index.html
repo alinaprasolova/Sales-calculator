@@ -1,436 +1,771 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Калькулятор сравнения выгоды — Robokassa</title>
-    <link rel="icon" type="image/png" href="v-rk-32.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* ─── Дизайн-токены Robokassa ───────────────────────────── */
-        :root {
-            --rk-blue:        #525FFB;
-            --rk-blue-hover:  #3D49F0;
-            --rk-blue-light:  #EEEEFF;
-            --rk-dark:        #000000;
-            --rk-text:        #1A1A1A;
-            --rk-text-muted:  #6B7394;
-            --rk-success:     #0D9F6E;
-            --rk-success-bg:  #EDFAF5;
-            --rk-danger:      #D93547;
-            --rk-danger-bg:   #FFF0F1;
-            --rk-bg:          #F2F5FA;
-            --rk-white:       #FFFFFF;
-            --rk-border:      #E2E7F1;
-            --rk-radius-sm:   8px;
-            --rk-radius-md:   14px;
-            --rk-radius-lg:   20px;
-            --rk-shadow-sm:   0 2px 8px rgba(15, 21, 53, 0.06);
-            --rk-shadow-md:   0 6px 24px rgba(15, 21, 53, 0.10);
-            --rk-font:        'Geologica', 'Segoe UI', system-ui, sans-serif;
-            --rk-transition:  0.2s ease;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Калькулятор выгоды — Robokassa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="v-rk-32.png">
+  <style>
+    :root {
+      --rk-blue: #525FFB;
+      --rk-blue-hover: #3D49F0;
+      --rk-blue-light: #EEEEFF;
+      --rk-dark: #1C2238;
+      --rk-text: #2A3047;
+      --rk-text-muted: #70789B;
+      --rk-success: #0D9F6E;
+      --rk-success-bg: #EEF9F4;
+      --rk-danger: #D93547;
+      --rk-danger-bg: #FFF1F2;
+      --rk-bg: #F2F5FA;
+      --rk-white: #FFFFFF;
+      --rk-border: #E2E7F1;
+      --rk-radius-sm: 12px;
+      --rk-radius-md: 16px;
+      --rk-radius-lg: 20px;
+      --rk-shadow: 0 6px 24px rgba(15, 21, 53, 0.06);
+      --rk-font: 'Geologica', sans-serif;
+      --rk-transition: .2s ease;
+    }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--rk-bg);
+      color: var(--rk-text);
+      font-family: var(--rk-font);
+      -webkit-font-smoothing: antialiased;
+      padding: 28px 20px 48px;
+    }
 
-        body {
-            font-family: var(--rk-font);
-            background: var(--rk-bg);
-            color: var(--rk-text);
-            min-height: 100vh;
-            padding: 40px 20px 60px;
-            -webkit-font-smoothing: antialiased;
-        }
+    .page {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 76px);
+    }
 
-        /* Логотип слева наверху, размер еще меньше */
-        .rk-header {
-            max-width: 860px;
-            margin: 0 auto 24px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-        }
-        .rk-logo-img { height: 16px; width: auto; display: block; } 
+    .rk-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 22px;
+    }
 
-        .container {
-            max-width: 860px;
-            margin: 0 auto;
-            background: var(--rk-bg); 
-            padding-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            min-height: calc(100vh - 100px);
-        }
+    .rk-logo-img {
+      display: block;
+      width: auto;
+      height: 22px;
+    }
 
-        /* Заголовок по центру */
-        .calc-title { text-align: center; margin-bottom: 32px; }
-        .calc-title h1 { font-size: 28px; font-weight: 700; color: var(--rk-dark); letter-spacing: -0.5px; line-height: 1.25; margin-bottom: 8px; }
-        .calc-title p { font-size: 15px; color: var(--rk-text-muted); }
+    .hero {
+      text-align: center;
+      margin-bottom: 28px;
+    }
 
-        .section { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius-lg); padding: 28px 32px; margin-bottom: 16px; box-shadow: var(--rk-shadow-sm); }
-        h3 { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--rk-text-muted); margin-bottom: 20px; }
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 40px;
+      line-height: 1.08;
+      color: var(--rk-dark);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .hero p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.45;
+      color: var(--rk-text-muted);
+      font-weight: 500;
+    }
 
-        .col-card { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius-lg); padding: 28px; box-shadow: var(--rk-shadow-sm); }
-        .col-card.col-you { border-top: 3px solid var(--rk-blue); }
-        .col-card.col-comp { border-top: 3px solid var(--rk-border); }
-        .col-card h3 { color: var(--rk-text-muted); }
-        .col-card.col-you h3 { color: var(--rk-blue); }
+    .card {
+      background: var(--rk-white);
+      border: 1px solid var(--rk-border);
+      border-radius: var(--rk-radius-lg);
+      box-shadow: var(--rk-shadow);
+    }
 
-        .input-group { margin-bottom: 14px; }
-        .input-group:last-child { margin-bottom: 0; }
-        label { display: block; font-size: 12.5px; font-weight: 500; color: var(--rk-text-muted); margin-bottom: 6px; }
+    .section {
+      padding: 28px 32px;
+      margin-bottom: 16px;
+    }
 
-        input[type="number"] { width: 100%; padding: 11px 14px; border: 1.5px solid var(--rk-border); border-radius: var(--rk-radius-sm); background: var(--rk-bg); color: var(--rk-text); font-family: var(--rk-font); font-size: 15px; font-weight: 500; transition: all var(--rk-transition); }
-        input[type="number"]:focus { outline: none; border-color: var(--rk-blue); background: var(--rk-white); box-shadow: 0 0 0 3px rgba(82, 95, 251, 0.12); }
-        input.error-field { border-color: var(--rk-danger) !important; background-color: var(--rk-danger-bg) !important; }
+    .section-title {
+      margin: 0 0 20px;
+      font-size: 14px;
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--rk-text-muted);
+      font-weight: 600;
+    }
 
-        /* Кнопка расчета по центру */
-        .btn-calc-wrapper { display: flex; justify-content: center; margin: 24px 0 32px; }
-        .btn-calc { width: 100%; max-width: 320px; background-color: var(--rk-blue); color: var(--rk-white); border: none; padding: 16px; font-size: 16px; font-weight: 600; border-radius: var(--rk-radius-sm); cursor: pointer; box-shadow: 0 4px 12px rgba(82, 95, 251, 0.3); transition: all 0.2s ease; }
-        .btn-calc:hover { background-color: var(--rk-blue-hover); transform: translateY(-2px); }
+    .inputs-top {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
 
-        .results-section { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius-lg); padding: 28px 32px; box-shadow: var(--rk-shadow-sm); }
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .results-table { width: 100%; min-width: 500px; border-collapse: collapse; }
-        .results-table thead th { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--rk-text-muted); padding: 0 14px 12px; text-align: center; border-bottom: 2px solid var(--rk-border); }
-        .results-table thead th:first-child { text-align: left; }
-        .results-table tbody tr { border-bottom: 1px solid var(--rk-border); }
-        .results-table tbody tr:last-child { border-bottom: none; }
-        .results-table td { padding: 13px 14px; font-size: 14.5px; text-align: center; }
-        .results-table td:first-child { text-align: left; color: var(--rk-text-muted); white-space: nowrap; }
-        .results-table tr.highlight { background: var(--rk-blue-light); }
-        .results-table tr.highlight td { font-weight: 700; color: var(--rk-blue); }
+    .split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      margin-bottom: 8px;
+    }
 
-        .profit-diff { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; padding: 20px; border-radius: var(--rk-radius-md); background: var(--rk-success-bg); color: var(--rk-success); border: 1.5px solid #B2ECDA; text-align: center; }
-        .profit-main { font-size: 22px; font-weight: 700; }
-        .profit-year { font-size: 15px; font-weight: 500; margin-top: 6px; opacity: 0.9; }
+    .subcard {
+      padding: 28px 28px 24px;
+      min-height: 100%;
+    }
 
-        /* Кнопка экспорта по центру */
-        .export-actions { display: flex; justify-content: center; margin-top: 24px; }
-        .btn-export { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 24px; font-size: 15px; font-weight: 600; border-radius: var(--rk-radius-sm); cursor: pointer; transition: all 0.2s ease; border: 1.5px solid var(--rk-blue); background: transparent; color: var(--rk-blue); max-width: 320px; width: 100%; }
-        .btn-export:hover { background-color: var(--rk-blue-light); }
+    .subcard-primary {
+      border-top: 3px solid var(--rk-blue);
+    }
 
-        /* ─── ПРАВИЛО ДЛЯ ЭКРАНА: СКРЫТЬ ПОДВАЛ ─── */
-        @media screen {
-            .print-only-footer {
-                display: none !important;
-            }
-        }
+    .field {
+      margin-bottom: 18px;
+    }
 
-        @media (max-width: 640px) {
-            body { padding: 20px 16px; }
-            .rk-logo-img { height: 12px; } /* Крошечный логотип для мобилок */
-            .calc-title h1 { font-size: 24px; }
-            .section, .col-card, .results-section { padding: 20px 16px; }
-            .grid-2, .grid-2-col { grid-template-columns: 1fr; gap: 12px; }
-            .results-table td { padding: 12px 10px; font-size: 13.5px; }
-            .results-table td:first-child { font-size: 13px; }
-            .profit-main { font-size: 18px; }
-        }
+    .field:last-child,
+    .info-box:last-child {
+      margin-bottom: 0;
+    }
 
-        /* ─── МАГИЯ ДЛЯ ИДЕАЛЬНОГО ПЕЧАТНОГО PDF ─── */
-        @media print {
-            @page { size: A4 portrait; margin: 8mm; }
-            
-            body { background: white !important; padding: 0 !important; margin: 0 !important; }
-            .container { background: white !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; display: flex; flex-direction: column; min-height: 277mm; }
-            
-            .no-print, .btn-calc-wrapper, .export-actions { display: none !important; }
-            
-            .rk-header { margin-bottom: 12px !important; }
-            .rk-logo-img { height: 16px !important; }
-            .calc-title { margin-bottom: 16px !important; }
-            .calc-title h1 { font-size: 20px !important; margin-bottom: 4px !important; }
-            .calc-title p { font-size: 12px !important; margin-bottom: 0 !important; }
-            
-            .section, .col-card, .results-section { 
-                padding: 12px 16px !important; 
-                margin-bottom: 12px !important; 
-                box-shadow: none !important; 
-                border: 1px solid #E2E7F1 !important; 
-            }
-            
-            h3 { font-size: 11px !important; margin-bottom: 10px !important; }
-            .input-group { margin-bottom: 6px !important; }
-            label { font-size: 10px !important; margin-bottom: 2px !important; }
-            input[type="number"] { padding: 6px 10px !important; font-size: 13px !important; border: 1px solid #E2E7F1 !important; }
-            
-            .grid-2 { gap: 10px !important; }
-            .grid-2-col { display: flex !important; gap: 12px !important; margin-bottom: 12px !important; }
-            .col-card { flex: 1 !important; }
-            
-            .results-table td { padding: 8px 10px !important; font-size: 12px !important; }
-            .results-table thead th { padding: 0 10px 8px !important; font-size: 10px !important; }
-            
-            .profit-diff { margin-top: 12px !important; padding: 12px !important; }
-            .profit-main { font-size: 18px !important; }
-            .profit-year { font-size: 12px !important; margin-top: 2px !important; }
-            
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12.5px;
+      line-height: 1.35;
+      color: var(--rk-text-muted);
+      font-weight: 500;
+    }
 
-            /* ─── ПРАВИЛО ДЛЯ ПЕЧАТИ: ОФИЦИАЛЬНЫЙ БЛАНК (РЕКВИЗИТЫ) ─── */
-            .print-only-footer {
-                display: flex !important;
-                justify-content: space-between !important;
-                align-items: flex-start !important;
-                font-size: 10px !important;
-                color: var(--rk-text-muted) !important;
-                margin-top: auto !important; /* Прижимает текст к самому низу листа А4 */
-                padding-top: 12px !important;
-                border-top: 1px solid var(--rk-border) !important;
-                text-align: left !important;
-                line-height: 1.4 !important;
-            }
-            
-            .footer-col { flex: 1 !important; }
-            .footer-col.center { text-align: center !important; }
-            .footer-col.right { text-align: right !important; }
-            .footer-col strong { color: var(--rk-text) !important; font-size: 11px !important; }
-        }
-    </style>
+    input[type="number"] {
+      width: 100%;
+      height: 52px;
+      padding: 0 18px;
+      border-radius: 18px;
+      border: 1.5px solid #CCD5E6;
+      background: #F8FAFE;
+      color: var(--rk-dark);
+      font: 500 18px/1 var(--rk-font);
+      transition: border-color var(--rk-transition), box-shadow var(--rk-transition), background var(--rk-transition), opacity var(--rk-transition);
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--rk-blue);
+      background: var(--rk-white);
+      box-shadow: 0 0 0 4px rgba(82, 95, 251, 0.12);
+    }
+
+    input.error-field {
+      border-color: var(--rk-danger) !important;
+      background: var(--rk-danger-bg) !important;
+      box-shadow: 0 0 0 4px rgba(217, 53, 71, 0.08) !important;
+    }
+
+    .info-box {
+      margin-top: 4px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 1px solid var(--rk-border);
+      background: #F8FAFE;
+      color: var(--rk-text-muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      margin: 26px 0 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 300px;
+      height: 60px;
+      padding: 0 28px;
+      border-radius: 16px;
+      border: 1px solid transparent;
+      font: 600 16px/1 var(--rk-font);
+      cursor: pointer;
+      transition: transform var(--rk-transition), background var(--rk-transition), color var(--rk-transition), border-color var(--rk-transition), opacity var(--rk-transition), box-shadow var(--rk-transition);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--rk-blue);
+      color: var(--rk-white);
+      box-shadow: 0 8px 18px rgba(82, 95, 251, 0.28);
+    }
+
+    .btn-primary:hover { background: var(--rk-blue-hover); transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--rk-blue);
+      border-color: var(--rk-blue);
+    }
+
+    .btn-secondary:hover { background: var(--rk-blue-light); }
+
+    .btn[disabled] {
+      opacity: .45;
+      cursor: not-allowed;
+      pointer-events: none;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .state-note {
+      display: none;
+      max-width: 680px;
+      margin: 0 auto 18px;
+      padding: 13px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--rk-border);
+      background: var(--rk-white);
+      color: var(--rk-text-muted);
+      font-size: 13px;
+      line-height: 1.4;
+      text-align: center;
+      box-shadow: var(--rk-shadow);
+    }
+
+    .state-note.show { display: block; }
+
+    .results {
+      padding: 30px 32px 28px;
+      margin-top: 8px;
+    }
+
+    .results.is-hidden { display: none; }
+    .results.is-stale { opacity: .58; }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+    }
+
+    thead th {
+      padding: 0 14px 14px;
+      border-bottom: 2px solid var(--rk-border);
+      color: var(--rk-text-muted);
+      font-size: 12px;
+      line-height: 1.2;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    thead th:first-child,
+    tbody td:first-child {
+      text-align: left;
+    }
+
+    thead th:nth-child(2) {
+      color: var(--rk-blue);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--rk-border);
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody td {
+      padding: 18px 14px;
+      font-size: 16px;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    tbody td:first-child {
+      color: #6C7499;
+      font-weight: 500;
+    }
+
+    tr.highlight {
+      background: #F1F2FF;
+    }
+
+    tr.highlight td {
+      color: var(--rk-blue);
+      font-weight: 700;
+    }
+
+    .benefit {
+      margin-top: 22px;
+      padding: 28px 20px;
+      border-radius: 20px;
+      border: 1.5px solid #A7E7D0;
+      background: var(--rk-success-bg);
+      text-align: center;
+      color: var(--rk-success);
+    }
+
+    .benefit.negative {
+      background: var(--rk-danger-bg);
+      border-color: #F0B6BE;
+      color: var(--rk-danger);
+    }
+
+    .benefit-main {
+      font-size: 30px;
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .benefit-year {
+      margin-top: 12px;
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 500;
+      opacity: .9;
+    }
+
+    .export-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 22px;
+    }
+
+    .print-only-footer {
+      display: none;
+    }
+
+    @media (max-width: 1024px) {
+      .inputs-top {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 740px) {
+      body { padding: 18px 14px 36px; }
+      .rk-logo-img { height: 18px; }
+      .hero { margin-bottom: 22px; }
+      .hero h1 { font-size: 28px; }
+      .hero p { font-size: 14px; }
+      .section, .subcard, .results { padding: 22px 18px; }
+      .inputs-top, .split { grid-template-columns: 1fr; gap: 14px; }
+      .actions { margin: 22px 0 12px; }
+      .btn { min-width: 100%; width: 100%; }
+      tbody td { padding: 14px 10px; font-size: 14px; }
+      .benefit-main { font-size: 22px; }
+      .benefit-year { font-size: 16px; }
+    }
+
+    @media print {
+      @page { size: A4 portrait; margin: 8mm; }
+
+      body {
+        background: #fff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .page {
+        max-width: 100% !important;
+        min-height: 277mm;
+      }
+
+      .no-print, .actions, .export-actions, .state-note { display: none !important; }
+
+      .hero { margin-bottom: 16px !important; }
+      .hero h1 { font-size: 24px !important; margin-bottom: 6px !important; }
+      .hero p { font-size: 12px !important; }
+      .rk-header { margin-bottom: 12px !important; }
+      .rk-logo-img { height: 16px !important; }
+
+      .card, .subcard, .results {
+        box-shadow: none !important;
+        border: 1px solid var(--rk-border) !important;
+      }
+
+      .section, .subcard, .results {
+        padding: 14px 16px !important;
+        margin-bottom: 10px !important;
+      }
+
+      .section-title {
+        margin-bottom: 10px !important;
+        font-size: 11px !important;
+      }
+
+      .inputs-top, .split {
+        gap: 10px !important;
+      }
+
+      label {
+        margin-bottom: 4px !important;
+        font-size: 10px !important;
+      }
+
+      input[type="number"] {
+        height: 38px !important;
+        font-size: 13px !important;
+        padding: 0 12px !important;
+        border-radius: 12px !important;
+        background: #fff !important;
+      }
+
+      table { min-width: 100% !important; }
+      thead th { padding: 0 8px 8px !important; font-size: 10px !important; }
+      tbody td { padding: 8px !important; font-size: 12px !important; }
+      .benefit { margin-top: 12px !important; padding: 16px 14px !important; }
+      .benefit-main { font-size: 20px !important; }
+      .benefit-year { margin-top: 4px !important; font-size: 12px !important; }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .print-only-footer {
+        display: flex !important;
+        justify-content: space-between !important;
+        gap: 16px !important;
+        margin-top: auto !important;
+        padding-top: 12px !important;
+        border-top: 1px solid var(--rk-border) !important;
+        color: var(--rk-text-muted) !important;
+        font-size: 10px !important;
+        line-height: 1.4 !important;
+      }
+
+      .footer-col { flex: 1 !important; }
+      .footer-col.center { text-align: center !important; }
+      .footer-col.right { text-align: right !important; }
+      .footer-col strong { color: var(--rk-dark) !important; font-size: 11px !important; }
+    }
+  </style>
 </head>
 <body>
+  <div class="page">
+    <header class="rk-header">
+      <img src="logo_robokassa_black.png" alt="Robokassa" class="rk-logo-img">
+    </header>
 
-    <div class="container">
-        <div class="content-wrapper">
-            <header class="rk-header">
-                <img src="logo_robokassa_black.png" alt="Robokassa" class="rk-logo-img">
-            </header>
+    <section class="hero">
+      <h1>Калькулятор выгоды</h1>
+      <p>Сравните текущие условия и прогноз с Robokassa</p>
+    </section>
 
-            <div class="calc-title">
-                <h1>Калькулятор выгоды мерчанта</h1>
-                <p>Сравните условия и узнайте свою реальную выгоду</p>
-            </div>
-            
-            <div class="section">
-                <h3>Вводные данные (в месяц)</h3>
-                <div class="grid-2">
-                    <div class="input-group">
-                        <label>Оборот (попытки оплат), ₽</label>
-                        <input type="number" id="turnover" value="2000000" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Средний чек, ₽</label>
-                        <input type="number" id="avgCheck" value="6000" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Доля оплат Картами РФ, %</label>
-                        <input type="number" id="shareCard" value="70" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Доля оплат через СБП, %</label>
-                        <input type="number" id="shareSbp" value="50" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid-2-col">
-                <div class="col-card col-you">
-                    <h3>Условия Robokassa</h3>
-                    <div class="input-group">
-                        <label>Конверсия успешных оплат, %</label>
-                        <input type="number" id="convRobo" value="98" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Ставка: Карты РФ, %</label>
-                        <input type="number" id="rateCardRobo" value="3.9" step="0.1" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Ставка: СБП, %</label>
-                        <input type="number" id="rateSbpRobo" value="2.7" step="0.1" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                </div>
-
-                <div class="col-card col-comp">
-                    <h3>Текущий эквайринг</h3>
-                    <div class="input-group">
-                        <label>Конверсия успешных оплат, %</label>
-                        <input type="number" id="convComp" value="90" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Ставка: Карты РФ, %</label>
-                        <input type="number" id="rateCardComp" value="3.5" step="0.1" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Ставка: СБП, %</label>
-                        <input type="number" id="rateSbpComp" value="3.5" step="0.1" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                </div>
-            </div>
-
-            <div class="btn-calc-wrapper no-print">
-                <button class="btn-calc" onclick="calculate()">Рассчитать выгоду</button>
-            </div>
-
-            <div class="results-section">
-                <h3>Сравнение результатов</h3>
-                
-                <div class="table-wrapper">
-                    <table class="results-table">
-                        <thead>
-                            <tr>
-                                <th>Показатель</th>
-                                <th style="color: var(--rk-blue);">Robokassa</th>
-                                <th>Текущий эквайринг</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Успешных операций, шт.</td>
-                                <td id="resOpsRobo">0</td>
-                                <td id="resOpsComp">0</td>
-                            </tr>
-                            <tr>
-                                <td>Успешные платежи, ₽</td>
-                                <td id="resPayRobo">0</td>
-                                <td id="resPayComp">0</td>
-                            </tr>
-                            <tr>
-                                <td>Затраты на комиссию, ₽</td>
-                                <td id="resFeeRobo">0</td>
-                                <td id="resFeeComp">0</td>
-                            </tr>
-                            <tr class="highlight">
-                                <td>Прибыль компании (в мес.), ₽</td>
-                                <td id="resProfitRobo">0</td>
-                                <td id="resProfitComp">0</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="profit-diff" id="profitDiff">
-                    <div class="profit-main" id="profitMain">✦ Дополнительная прибыль: 0 ₽</div>
-                    <div class="profit-year" id="profitYear"></div>
-                </div>
-                
-                <div class="export-actions no-print">
-                    <button class="btn-export" onclick="window.print()">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                            <polyline points="10 9 9 9 8 9"></polyline>
-                        </svg>
-                        Сохранить в PDF
-                    </button>
-                </div>
-            </div>
+    <section class="card section">
+      <h2 class="section-title">Вводные данные (в месяц)</h2>
+      <div class="inputs-top">
+        <div class="field">
+          <label for="turnover">Оборот (попытки оплат), ₽</label>
+          <input type="number" id="turnover" value="2000000" inputmode="decimal">
         </div>
-        
-        <div class="print-only-footer">
-            <div class="footer-col">
-                <strong>ООО «РОБОКАССА»</strong><br>
-                5047063929 / 771601001
-            </div>
-            <div class="footer-col center">
-                115054, г. Москва,<br>
-                Стремянный переулок д. 26
-            </div>
-            <div class="footer-col right">
-                8 (499) 110-57-25<br>
-                robokassa.com
-            </div>
+        <div class="field">
+          <label for="avgCheck">Средний чек, ₽</label>
+          <input type="number" id="avgCheck" value="6000" inputmode="decimal">
         </div>
+        <div class="field">
+          <label for="shareCard">Доля оплат Картами РФ, %</label>
+          <input type="number" id="shareCard" value="50" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="shareSbp">Доля оплат через СБП, %</label>
+          <input type="number" id="shareSbp" value="50" inputmode="decimal">
+        </div>
+      </div>
+    </section>
 
+    <section class="split">
+      <div class="card subcard subcard-primary">
+        <h2 class="section-title">Условия Robokassa</h2>
+        <div class="field">
+          <label for="convRobo">Конверсия успешных оплат, %</label>
+          <input type="number" id="convRobo" value="98" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="rateCardRobo">Ставка: Карты РФ, %</label>
+          <input type="number" id="rateCardRobo" value="3.9" step="0.1" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="rateSbpRobo">Ставка: СБП, %</label>
+          <input type="number" id="rateSbpRobo" value="2.7" step="0.1" inputmode="decimal">
+        </div>
+      </div>
+
+      <div class="card subcard">
+        <h2 class="section-title">Текущий эквайринг</h2>
+        <div class="field">
+          <label for="convComp">Конверсия успешных оплат, %</label>
+          <input type="number" id="convComp" value="90" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="rateCardComp">Ставка: Карты РФ, %</label>
+          <input type="number" id="rateCardComp" value="3.5" step="0.1" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="rateSbpComp">Ставка: СБП, %</label>
+          <input type="number" id="rateSbpComp" value="3.5" step="0.1" inputmode="decimal">
+        </div>
+      </div>
+    </section>
+
+    <div class="actions no-print">
+      <button type="button" class="btn btn-primary" id="calculateBtn">Рассчитать выгоду</button>
     </div>
 
-    <script>
-        function restrictInput(event) {
-            if (['e', 'E', '+', '-'].includes(event.key)) {
-                event.preventDefault();
-            }
+    <div class="state-note no-print" id="stateNote">Данные изменены. Нажмите «Пересчитать», чтобы обновить результат.</div>
+
+    <section class="card results is-hidden" id="resultsSection">
+      <h2 class="section-title">Сравнение результатов</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Показатель</th>
+              <th>Robokassa</th>
+              <th>Текущий эквайринг</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Успешных операций, шт.</td>
+              <td id="resOpsRobo">0</td>
+              <td id="resOpsComp">0</td>
+            </tr>
+            <tr>
+              <td>Успешные платежи, ₽</td>
+              <td id="resPayRobo">0</td>
+              <td id="resPayComp">0</td>
+            </tr>
+            <tr>
+              <td>Затраты на комиссию, ₽</td>
+              <td id="resFeeRobo">0</td>
+              <td id="resFeeComp">0</td>
+            </tr>
+            <tr class="highlight">
+              <td>Прибыль компании (в мес.), ₽</td>
+              <td id="resProfitRobo">0</td>
+              <td id="resProfitComp">0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="benefit" id="benefitBlock">
+        <div class="benefit-main" id="benefitMain">Ваша выгода: + 0 ₽ в мес.</div>
+        <div class="benefit-year" id="benefitYear">или + 0 ₽ в год</div>
+      </div>
+
+      <div class="export-actions no-print">
+        <button type="button" class="btn btn-secondary" id="pdfBtn" disabled>Сохранить в PDF</button>
+      </div>
+    </section>
+
+    <footer class="print-only-footer">
+      <div class="footer-col"><strong>ООО «РОБОКАССА»</strong><br>ИНН 5047063929 / КПП 771601001</div>
+      <div class="footer-col center">115054, г. Москва,<br>Стремянный переулок, д. 26</div>
+      <div class="footer-col right">8 (499) 110-57-25<br>robokassa.com</div>
+    </footer>
+  </div>
+
+  <script>
+    const inputIds = [
+      'turnover', 'avgCheck', 'shareCard', 'shareSbp',
+      'convRobo', 'rateCardRobo', 'rateSbpRobo',
+      'convComp', 'rateCardComp', 'rateSbpComp'
+    ];
+
+    const resultsSection = document.getElementById('resultsSection');
+    const stateNote = document.getElementById('stateNote');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const pdfBtn = document.getElementById('pdfBtn');
+    const benefitBlock = document.getElementById('benefitBlock');
+    let isCalculated = false;
+    let isStale = false;
+
+    function restrictInput(event) {
+      if (['e', 'E', '+', '-'].includes(event.key)) {
+        event.preventDefault();
+      }
+    }
+
+    function formatNumber(num) {
+      return Math.round(num).toLocaleString('ru-RU');
+    }
+
+    function markFieldValid(input) {
+      input.classList.remove('error-field');
+    }
+
+    function validateInputs() {
+      let valid = true;
+      const values = {};
+
+      inputIds.forEach((id) => {
+        const input = document.getElementById(id);
+        const raw = input.value.trim().replace(',', '.');
+        const number = Number(raw);
+
+        if (raw === '' || Number.isNaN(number)) {
+          input.classList.add('error-field');
+          valid = false;
+          return;
         }
-        
-        function clearError(element) {
-            element.classList.remove('error-field');
+
+        if (id === 'avgCheck' && number <= 0) {
+          input.classList.add('error-field');
+          valid = false;
+          return;
         }
 
-        function formatNumber(num) {
-            return Math.round(num).toLocaleString('ru-RU');
+        if ((id === 'shareCard' || id === 'shareSbp' || id === 'convRobo' || id === 'convComp') && (number < 0 || number > 100)) {
+          input.classList.add('error-field');
+          valid = false;
+          return;
         }
 
-        function calculateProviderMetrics(turnover, avgCheck, shareCard, shareSbp, convRate, rateCard, rateSbp) {
-            const pay = turnover * convRate;
-            const ops = avgCheck > 0 ? (turnover / avgCheck) * convRate : 0;
-            const fee = pay * (shareCard * rateCard + shareSbp * rateSbp);
-            const profit = pay - fee;
-            return { ops, pay, fee, profit };
+        if ((id === 'rateCardRobo' || id === 'rateSbpRobo' || id === 'rateCardComp' || id === 'rateSbpComp' || id === 'turnover') && number < 0) {
+          input.classList.add('error-field');
+          valid = false;
+          return;
         }
 
-        function calculate() {
-            const allInputs = document.querySelectorAll('input[type="number"]');
-            let hasError = false;
-            
-            allInputs.forEach(input => {
-                if (input.value.trim() === '' || isNaN(input.value)) {
-                    input.classList.add('error-field');
-                    hasError = true;
-                } else {
-                    input.classList.remove('error-field');
-                }
-            });
+        markFieldValid(input);
+        values[id] = number;
+      });
 
-            if (hasError) {
-                alert("Пожалуйста, заполните все поля корректными числами. Буквы и пустые поля не допускаются.");
-                return;
-            }
+      if ((values.shareCard ?? 0) + (values.shareSbp ?? 0) > 100) {
+        document.getElementById('shareCard').classList.add('error-field');
+        document.getElementById('shareSbp').classList.add('error-field');
+        valid = false;
+      }
 
-            const turnover = parseFloat(document.getElementById('turnover').value);
-            const avgCheck = parseFloat(document.getElementById('avgCheck').value);
-            const shareCard = parseFloat(document.getElementById('shareCard').value) / 100;
-            const shareSbp = parseFloat(document.getElementById('shareSbp').value) / 100;
+      return valid ? values : null;
+    }
 
-            const convRobo = parseFloat(document.getElementById('convRobo').value) / 100;
-            const rateCardRobo = parseFloat(document.getElementById('rateCardRobo').value) / 100;
-            const rateSbpRobo = parseFloat(document.getElementById('rateSbpRobo').value) / 100;
+    function calculateProviderMetrics(turnover, avgCheck, shareCard, shareSbp, convRate, rateCard, rateSbp) {
+      const pay = turnover * convRate;
+      const ops = avgCheck > 0 ? (turnover / avgCheck) * convRate : 0;
+      const fee = pay * (shareCard * rateCard + shareSbp * rateSbp);
+      const profit = pay - fee;
+      return { ops, pay, fee, profit };
+    }
 
-            const convComp = parseFloat(document.getElementById('convComp').value) / 100;
-            const rateCardComp = parseFloat(document.getElementById('rateCardComp').value) / 100;
-            const rateSbpComp = parseFloat(document.getElementById('rateSbpComp').value) / 100;
+    function updateResults(roboMetrics, compMetrics) {
+      document.getElementById('resOpsRobo').textContent = formatNumber(roboMetrics.ops);
+      document.getElementById('resOpsComp').textContent = formatNumber(compMetrics.ops);
+      document.getElementById('resPayRobo').textContent = formatNumber(roboMetrics.pay);
+      document.getElementById('resPayComp').textContent = formatNumber(compMetrics.pay);
+      document.getElementById('resFeeRobo').textContent = formatNumber(roboMetrics.fee);
+      document.getElementById('resFeeComp').textContent = formatNumber(compMetrics.fee);
+      document.getElementById('resProfitRobo').textContent = formatNumber(roboMetrics.profit);
+      document.getElementById('resProfitComp').textContent = formatNumber(compMetrics.profit);
 
-            const roboMetrics = calculateProviderMetrics(turnover, avgCheck, shareCard, shareSbp, convRobo, rateCardRobo, rateSbpRobo);
-            const compMetrics = calculateProviderMetrics(turnover, avgCheck, shareCard, shareSbp, convComp, rateCardComp, rateSbpComp);
+      const diffMonth = roboMetrics.profit - compMetrics.profit;
+      const diffYear = diffMonth * 12;
+      const benefitMain = document.getElementById('benefitMain');
+      const benefitYear = document.getElementById('benefitYear');
 
-            document.getElementById('resOpsRobo').innerText = formatNumber(roboMetrics.ops);
-            document.getElementById('resOpsComp').innerText = formatNumber(compMetrics.ops);
-            document.getElementById('resPayRobo').innerText = formatNumber(roboMetrics.pay);
-            document.getElementById('resPayComp').innerText = formatNumber(compMetrics.pay);
-            document.getElementById('resFeeRobo').innerText = formatNumber(roboMetrics.fee);
-            document.getElementById('resFeeComp').innerText = formatNumber(compMetrics.fee);
-            document.getElementById('resProfitRobo').innerText = formatNumber(roboMetrics.profit);
-            document.getElementById('resProfitComp').innerText = formatNumber(compMetrics.profit);
+      if (diffMonth >= 0) {
+        benefitBlock.classList.remove('negative');
+        benefitMain.textContent = `Ваша выгода: + ${formatNumber(diffMonth)} ₽ в мес.`;
+        benefitYear.textContent = `или + ${formatNumber(diffYear)} ₽ в год`;
+      } else {
+        benefitBlock.classList.add('negative');
+        benefitMain.textContent = `Разница: ${formatNumber(diffMonth)} ₽ в мес.`;
+        benefitYear.textContent = `или ${formatNumber(diffYear)} ₽ в год`;
+      }
+    }
 
-            const diffMonth = roboMetrics.profit - compMetrics.profit;
-            const diffYear = diffMonth * 12;
-            
-            const diffBlock = document.getElementById('profitDiff');
-            const diffMain = document.getElementById('profitMain');
-            const diffYearText = document.getElementById('profitYear');
-            
-            if (diffMonth >= 0) {
-                diffMain.innerText = '✦ Ваша выгода: + ' + formatNumber(diffMonth) + ' ₽ в мес.';
-                diffYearText.innerText = 'или + ' + formatNumber(diffYear) + ' ₽ в год';
-                diffBlock.style.color = 'var(--rk-success)';
-                diffBlock.style.background = 'var(--rk-success-bg)';
-                diffBlock.style.borderColor = '#B2ECDA';
-            } else {
-                diffMain.innerText = '✦ Разница: ' + formatNumber(diffMonth) + ' ₽ в мес.';
-                diffYearText.innerText = 'или ' + formatNumber(diffYear) + ' ₽ в год';
-                diffBlock.style.color = 'var(--rk-danger)';
-                diffBlock.style.background = 'var(--rk-danger-bg)';
-                diffBlock.style.borderColor = '#F5B8BE';
-            }
-        }
+    function applyFreshState() {
+      isCalculated = true;
+      isStale = false;
+      resultsSection.classList.remove('is-hidden', 'is-stale');
+      stateNote.classList.remove('show');
+      calculateBtn.textContent = 'Пересчитать';
+      pdfBtn.disabled = false;
+    }
 
-        calculate();
-    </script>
+    function markStale() {
+      if (!isCalculated || isStale) return;
+      isStale = true;
+      resultsSection.classList.add('is-stale');
+      stateNote.classList.add('show');
+      pdfBtn.disabled = true;
+    }
+
+    function runCalculation(scrollToResults = false) {
+      const values = validateInputs();
+      if (!values) {
+        alert('Пожалуйста, заполните все поля корректными значениями.');
+        return;
+      }
+
+      const roboMetrics = calculateProviderMetrics(
+        values.turnover,
+        values.avgCheck,
+        values.shareCard / 100,
+        values.shareSbp / 100,
+        values.convRobo / 100,
+        values.rateCardRobo / 100,
+        values.rateSbpRobo / 100
+      );
+
+      const compMetrics = calculateProviderMetrics(
+        values.turnover,
+        values.avgCheck,
+        values.shareCard / 100,
+        values.shareSbp / 100,
+        values.convComp / 100,
+        values.rateCardComp / 100,
+        values.rateSbpComp / 100
+      );
+
+      updateResults(roboMetrics, compMetrics);
+      applyFreshState();
+
+      if (scrollToResults) {
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    inputIds.forEach((id) => {
+      const input = document.getElementById(id);
+      input.addEventListener('keydown', restrictInput);
+      input.addEventListener('input', () => {
+        input.value = input.value.replace(',', '.');
+        markFieldValid(input);
+        markStale();
+      });
+    });
+
+    calculateBtn.addEventListener('click', () => runCalculation(true));
+    pdfBtn.addEventListener('click', () => window.print());
+  </script>
 </body>
 </html>
