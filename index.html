@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Калькулятор выгоды — Robokassa</title>
+  <title>Конверсия | Выгода от конверсии</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,20 +14,21 @@
       --rk-blue: #525FFB;
       --rk-blue-hover: #3D49F0;
       --rk-blue-light: #EEEEFF;
-      --rk-dark: #1C2238;
-      --rk-text: #2A3047;
-      --rk-text-muted: #70789B;
+      --rk-dark: #182033;
+      --rk-text: #182033;
+      --rk-text-muted: #6B7394;
       --rk-success: #0D9F6E;
-      --rk-success-bg: #EEF9F4;
+      --rk-success-bg: #EAF8F2;
       --rk-danger: #D93547;
-      --rk-danger-bg: #FFF1F2;
+      --rk-danger-bg: #FFF1F3;
       --rk-bg: #F2F5FA;
       --rk-white: #FFFFFF;
       --rk-border: #E2E7F1;
-      --rk-radius-sm: 12px;
+      --rk-radius-sm: 14px;
       --rk-radius-md: 16px;
       --rk-radius-lg: 20px;
-      --rk-shadow: 0 6px 24px rgba(15, 21, 53, 0.06);
+      --rk-shadow: 0 10px 30px rgba(29, 37, 74, 0.08);
+      --rk-shadow-sm: 0 4px 14px rgba(29, 37, 74, 0.06);
       --rk-font: 'Geologica', sans-serif;
       --rk-transition: .2s ease;
     }
@@ -40,48 +41,48 @@
       color: var(--rk-text);
       font-family: var(--rk-font);
       -webkit-font-smoothing: antialiased;
-      padding: 28px 20px 48px;
+      padding: 32px 20px 48px;
     }
 
     .page {
-      width: 100%;
-      max-width: 1120px;
+      max-width: 980px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      min-height: calc(100vh - 76px);
+      min-height: 100vh;
+      gap: 18px;
     }
 
     .rk-header {
       display: flex;
       align-items: center;
-      margin-bottom: 22px;
+      margin-bottom: 8px;
     }
 
     .rk-logo-img {
       display: block;
       width: auto;
-      height: 22px;
+      width: 168px;
+      height: auto;
     }
 
     .hero {
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 10px;
     }
 
     .hero h1 {
-      margin: 0 0 10px;
-      font-size: 40px;
-      line-height: 1.08;
+      margin: 0 0 8px;
+      font-size: 32px;
+      line-height: 1.2;
       color: var(--rk-dark);
       font-weight: 700;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.5px;
     }
 
     .hero p {
       margin: 0;
-      font-size: 15px;
-      line-height: 1.45;
+      font-size: 14px;
       color: var(--rk-text-muted);
       font-weight: 500;
     }
@@ -111,13 +112,13 @@
     .inputs-top {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 20px;
+      gap: 16px;
     }
 
     .split {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
+      gap: 16px;
       margin-bottom: 8px;
     }
 
@@ -370,8 +371,8 @@
     @media (max-width: 740px) {
       body { padding: 18px 14px 36px; }
       .rk-logo-img { height: 18px; }
-      .hero { margin-bottom: 22px; }
-      .hero h1 { font-size: 28px; }
+      .hero { margin-bottom: 8px; }
+      .hero h1 { font-size: 32px; }
       .hero p { font-size: 14px; }
       .section, .subcard, .results { padding: 22px 18px; }
       .inputs-top, .split { grid-template-columns: 1fr; gap: 14px; }
@@ -589,7 +590,7 @@
     <footer class="print-only-footer">
       <div class="footer-col"><strong>ООО «РОБОКАССА»</strong><br>ИНН 5047063929 / КПП 771601001</div>
       <div class="footer-col center">115054, г. Москва,<br>Стремянный переулок, д. 26</div>
-      <div class="footer-col right">8 (800) 500-25-57<br>robokassa.com</div>
+      <div class="footer-col right">8 (499) 110-57-25<br>robokassa.com</div>
     </footer>
   </div>
 
