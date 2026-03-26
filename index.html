@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Калькулятор выгоды — Robokassa</title>
+    <title>Калькулятор выгоды компании — Robokassa</title>
 
     <link rel="icon" type="image/png" href="v-rk-32.png">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -40,13 +38,12 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Главный контейнер */
-        #main-container {
+        .container {
             max-width: 860px;
             margin: 0 auto;
         }
 
-        /* Логотип ВСЕГДА слева */
+        /* Логотип СЛЕВА */
         .rk-header {
             display: flex;
             justify-content: flex-start;
@@ -55,18 +52,18 @@
         }
         .rk-logo { height: 16px; width: auto; display: block; }
 
-        /* Заголовок ВСЕГДА по центру */
+        /* Заголовок ПО ЦЕНТРУ */
         .calc-title { text-align: center; margin-bottom: 32px; width: 100%; }
         .calc-title h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--rk-dark); }
         .calc-title p { font-size: 15px; color: var(--rk-muted); }
 
-        .section { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 24px; margin-bottom: 16px; }
+        .section { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 28px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--rk-muted); margin-bottom: 20px; letter-spacing: 0.5px; }
 
         .grid-inputs, .grid-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .grid-cards { margin-bottom: 16px; }
 
-        .card { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 24px; }
+        .card { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .card.robo { border-top: 3px solid var(--rk-blue); }
         .card.robo h3 { color: var(--rk-blue); }
         .card.comp { border-top: 3px solid var(--rk-border); }
@@ -75,43 +72,61 @@
         label { display: block; font-size: 11px; font-weight: 500; color: var(--rk-muted); margin-bottom: 6px; }
         input { width: 100%; padding: 10px; border: 1.5px solid var(--rk-border); border-radius: 8px; background: var(--rk-bg); font-family: var(--rk-font); font-size: 14px; font-weight: 500; }
 
-        /* Фиксированные контейнеры для кнопок, чтобы ничего не прыгало */
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            margin: 20px 0;
-            min-height: 50px;
-        }
-        .btn-main { width: 100%; max-width: 300px; background: var(--rk-blue); color: #fff; border: none; padding: 14px; font-size: 16px; font-weight: 600; border-radius: 10px; cursor: pointer; }
-        .btn-pdf { width: 100%; max-width: 300px; padding: 12px; border: 1.5px solid var(--rk-blue); background: white; color: var(--rk-blue); font-weight: 600; border-radius: 10px; cursor: pointer; }
+        /* Кнопки ПО ЦЕНТРУ */
+        .btn-wrap { display: flex; justify-content: center; width: 100%; margin: 24px 0; }
+        .btn-main { width: 100%; max-width: 300px; background: var(--rk-blue); color: #fff; border: none; padding: 15px; font-size: 16px; font-weight: 600; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        .btn-main:hover { background: var(--rk-blue-hover); }
 
-        .results { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 24px; }
+        .results { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .res-table { width: 100%; border-collapse: collapse; }
         .res-table th { font-size: 11px; color: var(--rk-muted); padding: 10px; border-bottom: 2px solid var(--rk-border); text-align: center; }
         .res-table td { padding: 12px 10px; font-size: 14px; text-align: center; border-bottom: 1px solid var(--rk-border); }
         .res-table td:first-child { text-align: left; color: var(--rk-muted); }
         .res-table tr.highlight { background: var(--rk-blue-light); color: var(--rk-blue); font-weight: 700; }
 
-        .profit-box { margin-top: 20px; padding: 16px; border-radius: 12px; background: var(--rk-success-bg); color: var(--rk-success); text-align: center; border: 1.5px solid #B2ECDA; }
-        .profit-main { font-size: 19px; font-weight: 700; }
+        .profit-box { margin-top: 20px; padding: 20px; border-radius: 12px; background: var(--rk-success-bg); color: var(--rk-success); text-align: center; border: 1.5px solid #B2ECDA; }
+        .profit-main { font-size: 20px; font-weight: 700; }
 
-        /* ФУТЕР ДАННЫЕ (скрыты на сайте, видны в PDF) */
-        #pdf-footer-content { display: none; }
-        .footer-layout { display: flex; justify-content: space-between; font-size: 10px; color: #6B7394; border-top: 1px solid #E2E7F1; padding-top: 15px; margin-top: 30px; line-height: 1.4; }
+        .btn-pdf { display: block; width: 100%; max-width: 300px; margin: 24px auto 0; padding: 12px; border: 1.5px solid var(--rk-blue); background: white; color: var(--rk-blue); font-weight: 600; border-radius: 10px; cursor: pointer; text-align: center; }
+
+        /* Футер для бланка */
+        .print-footer { display: none; }
 
         @media (max-width: 640px) {
             .grid-inputs, .grid-cards { grid-template-columns: 1fr; }
             .rk-logo { height: 14px; }
+            .calc-title h1 { font-size: 24px; }
         }
 
-        /* Стиль для "невидимого" захвата */
-        .pdf-capture-temp { background: #F2F5FA !important; width: 800px !important; padding: 40px !important; position: absolute; left: -9999px; top: 0; }
+        /* ─── НАСТРОЙКИ ПЕЧАТИ ─── */
+        @media print {
+            @page { size: A4 portrait; margin: 10mm; }
+            body { background: white !important; padding: 0 !important; }
+            .no-print { display: none !important; }
+            .container { max-width: 100% !important; }
+            .section, .card, .results { box-shadow: none !important; border: 1px solid #E2E7F1 !important; margin-bottom: 10px !important; }
+            
+            /* Показываем футер только при печати */
+            .print-footer { 
+                display: flex !important; 
+                justify-content: space-between; 
+                margin-top: 30px; 
+                padding-top: 15px; 
+                border-top: 1px solid #E2E7F1; 
+                font-size: 10px; 
+                color: #6B7394; 
+                line-height: 1.4;
+            }
+            .footer-col { flex: 1; }
+            
+            /* Чтобы цвета (синий/зеленый) не пропадали в PDF */
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
     </style>
 </head>
 <body>
 
-<div id="main-container">
+<div class="container">
     <header class="rk-header">
         <img src="logo_robokassa_black.png" alt="Robokassa" class="rk-logo">
     </header>
@@ -146,8 +161,8 @@
         </div>
     </div>
 
-    <div class="btn-container">
-        <button class="btn-main" id="calc-btn" onclick="calculate()">Рассчитать выгоду</button>
+    <div class="btn-wrap no-print">
+        <button class="btn-main" onclick="calculate()">Рассчитать выгоду</button>
     </div>
 
     <div class="results">
@@ -166,21 +181,26 @@
 
         <div class="profit-box">
             <div class="profit-main" id="profit-main">✦ Дополнительная прибыль: 0 ₽</div>
-            <div style="font-size:13px; margin-top:4px;" id="profit-year">или 0 ₽ в год</div>
+            <div style="font-size:14px; margin-top:4px;" id="profit-year">или 0 ₽ в год</div>
         </div>
 
-        <div class="btn-container">
-            <button class="btn-pdf" id="pdf-btn" onclick="downloadPDF()">↓ Скачать КП в PDF</button>
-        </div>
+        <button class="btn-pdf no-print" onclick="window.print()">↓ Сохранить КП в PDF</button>
     </div>
 
-    <div id="pdf-footer-content">
-        <div class="footer-layout">
-            <div><strong>ООО «РОБОКАССА»</strong><br>ИНН 5047063929 / КПП 771601001</div>
-            <div style="text-align:center;">115054, г. Москва,<br>Стремянный переулок д. 26</div>
-            <div style="text-align:right;">8 (499) 110-57-25<br>robokassa.com</div>
+    <footer class="print-footer">
+        <div class="footer-col">
+            <strong>ООО «РОБОКАССА»</strong><br>
+            ИНН 5047063929 / КПП 771601001
         </div>
-    </div>
+        <div class="footer-col" style="text-align:center;">
+            115054, г. Москва,<br>
+            Стремянный переулок д. 26
+        </div>
+        <div class="footer-col" style="text-align:right;">
+            8 (499) 110-57-25<br>
+            robokassa.com
+        </div>
+    </footer>
 </div>
 
 <script>
@@ -216,44 +236,7 @@
         document.getElementById('profit-year').innerText = 'или + ' + fNum(d * 12) + ' ₽ в год';
     }
 
-    async function downloadPDF() {
-        const btn = document.getElementById('pdf-btn');
-        const originalContainer = document.getElementById('main-container');
-        
-        btn.innerText = "Подготовка...";
-        btn.disabled = true;
-
-        // Создаем клон всего контейнера для чистого захвата
-        const clone = originalContainer.cloneNode(true);
-        
-        // Настраиваем клон: убираем кнопки, показываем футер
-        clone.classList.add('pdf-capture-temp');
-        clone.querySelectorAll('.btn-container').forEach(b => b.remove());
-        const footer = clone.querySelector('#pdf-footer-content');
-        if(footer) footer.style.display = "block";
-
-        document.body.appendChild(clone);
-
-        const opt = {
-            margin: 10,
-            filename: 'КП_Robokassa.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, logging: false, width: 800 },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        try {
-            await html2pdf().set(opt).from(clone).save();
-        } catch (err) {
-            console.error(err);
-            alert("Произошла ошибка. Попробуйте обновить страницу.");
-        } finally {
-            document.body.removeChild(clone);
-            btn.innerText = "↓ Скачать КП в PDF";
-            btn.disabled = false;
-        }
-    }
-
+    // Запускаем расчет сразу при загрузке
     calculate();
 </script>
 </body>
