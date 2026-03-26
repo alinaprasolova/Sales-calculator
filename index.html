@@ -43,16 +43,17 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* Выравнивание и размер логотипа */
         .rk-header {
             max-width: 860px;
-            margin: 0 auto 32px;
+            margin: 0 auto 24px;
             display: flex;
             align-items: center;
+            justify-content: center; /* Центрируем логотип */
         }
 
-        /* Стили для логотипа картинкой */
         .rk-logo-img {
-            height: 32px;
+            height: 24px; /* Уменьшили для ПК */
             width: auto;
             display: block;
         }
@@ -146,6 +147,12 @@
             background: var(--rk-white);
             box-shadow: 0 0 0 3px rgba(82, 95, 251, 0.12);
         }
+        
+        /* Класс для подсветки ошибки */
+        input.error-field {
+            border-color: var(--rk-danger) !important;
+            background-color: var(--rk-danger-bg) !important;
+        }
 
         .btn-calc {
             display: block;
@@ -220,26 +227,37 @@
 
         .profit-diff {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             margin-top: 20px;
             padding: 20px;
             border-radius: var(--rk-radius-md);
-            font-size: 20px;
-            font-weight: 700;
             background: var(--rk-success-bg);
             color: var(--rk-success);
             border: 1.5px solid #B2ECDA;
             text-align: center;
         }
+        
+        .profit-main {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        
+        .profit-year {
+            font-size: 15px;
+            font-weight: 500;
+            margin-top: 6px;
+            opacity: 0.9;
+        }
 
         @media (max-width: 640px) {
             body { padding: 20px 16px; }
+            .rk-logo-img { height: 20px; } /* Еще меньше для телефона */
             .calc-title h1 { font-size: 24px; }
             .section, .col-card, .results-section { padding: 20px 16px; }
             .grid-2, .grid-2-col { grid-template-columns: 1fr; gap: 12px; }
             .btn-calc { max-width: 100%; }
-            .profit-diff { font-size: 16px; padding: 16px; }
         }
     </style>
 </head>
@@ -256,23 +274,23 @@
         </div>
         
         <div class="section">
-            <h3>Вводные данные</h3>
+            <h3>Вводные данные (в месяц)</h3>
             <div class="grid-2">
                 <div class="input-group">
                     <label>Оборот (попытки оплат), ₽</label>
-                    <input type="number" id="turnover" value="2000000" onkeydown="restrictInput(event)">
+                    <input type="number" id="turnover" value="2000000" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
                 </div>
                 <div class="input-group">
                     <label>Средний чек, ₽</label>
-                    <input type="number" id="avgCheck" value="6000" onkeydown="restrictInput(event)">
+                    <input type="number" id="avgCheck" value="6000" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
                 </div>
                 <div class="input-group">
                     <label>Доля оплат Картами РФ, %</label>
-                    <input type="number" id="shareCard" value="70" onkeydown="restrictInput(event)">
+                    <input type="number" id="shareCard" value="70" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
                 </div>
                 <div class="input-group">
                     <label>Доля оплат через СБП, %</label>
-                    <input type="number" id="shareSbp" value="50" onkeydown="restrictInput(event)">
+                    <input type="number" id="shareSbp" value="50" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
                 </div>
             </div>
         </div>
@@ -282,15 +300,15 @@
                 <h3>Ваши условия (Robokassa)</h3>
                 <div class="input-group">
                     <label>Конверсия успешных оплат, %</label>
-                    <input type="number" id="convRobo" value="98" onkeydown="restrictInput(event)">
+                    <input type="number" id="convRobo" value="98" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
                 </div>
                 <div class="input-group">
                     <label>Ставка: Карты РФ, %</label>
-                    <input type="number" id="rateCardRobo" value="3.9" step="0.1" onkeydown="restrictInput(event)">
+                    <input type="number" id="rateCardRobo" value="3.9" step="0.1" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
                 </div>
                 <div class="input-group">
                     <label>Ставка: СБП, %</label>
-                    <input type="number" id="rateSbpRobo" value="2.7" step="0.1" onkeydown="restrictInput(event)">
+                    <input type="number" id="rateSbpRobo" value="2.7" step="0.1" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
                 </div>
             </div>
 
@@ -298,15 +316,15 @@
                 <h3>Условия конкурента</h3>
                 <div class="input-group">
                     <label>Конверсия успешных оплат, %</label>
-                    <input type="number" id="convComp" value="90" onkeydown="restrictInput(event)">
+                    <input type="number" id="convComp" value="90" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
                 </div>
                 <div class="input-group">
                     <label>Ставка: Карты РФ, %</label>
-                    <input type="number" id="rateCardComp" value="3.5" step="0.1" onkeydown="restrictInput(event)">
+                    <input type="number" id="rateCardComp" value="3.5" step="0.1" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
                 </div>
                 <div class="input-group">
                     <label>Ставка: СБП, %</label>
-                    <input type="number" id="rateSbpComp" value="3.5" step="0.1" onkeydown="restrictInput(event)">
+                    <input type="number" id="rateSbpComp" value="3.5" step="0.1" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
                 </div>
             </div>
         </div>
@@ -342,7 +360,7 @@
                             <td id="resFeeComp">0</td>
                         </tr>
                         <tr class="highlight">
-                            <td>Прибыль мерчанта, ₽</td>
+                            <td>Прибыль мерчанта (в мес.), ₽</td>
                             <td id="resProfitRobo">0</td>
                             <td id="resProfitComp">0</td>
                         </tr>
@@ -351,16 +369,23 @@
             </div>
             
             <div class="profit-diff" id="profitDiff">
-                ✦ Дополнительная прибыль: 0 ₽
+                <div class="profit-main" id="profitMain">✦ Дополнительная прибыль: 0 ₽</div>
+                <div class="profit-year" id="profitYear"></div>
             </div>
         </div>
     </div>
 
     <script>
+        // Блокируем ввод некоторых спецсимволов с клавиатуры
         function restrictInput(event) {
             if (['e', 'E', '+', '-'].includes(event.key)) {
                 event.preventDefault();
             }
+        }
+        
+        // Убираем красную рамку, как только юзер начинает исправлять ошибку
+        function clearError(element) {
+            element.classList.remove('error-field');
         }
 
         function formatNumber(num) {
@@ -375,23 +400,39 @@
             return { ops, pay, fee, profit };
         }
 
-        function calculateProfitDifference(profit1, profit2) {
-            return profit1 - profit2;
-        }
-
         function calculate() {
-            const turnover = parseFloat(document.getElementById('turnover').value) || 0;
-            const avgCheck = parseFloat(document.getElementById('avgCheck').value) || 0;
-            const shareCard = (parseFloat(document.getElementById('shareCard').value) || 0) / 100;
-            const shareSbp = (parseFloat(document.getElementById('shareSbp').value) || 0) / 100;
+            // 1. ВАЛИДАЦИЯ (ПРОВЕРКА НА ОШИБКИ)
+            const allInputs = document.querySelectorAll('input[type="number"]');
+            let hasError = false;
+            
+            allInputs.forEach(input => {
+                // Если пустое или не является числом
+                if (input.value.trim() === '' || isNaN(input.value)) {
+                    input.classList.add('error-field');
+                    hasError = true;
+                } else {
+                    input.classList.remove('error-field');
+                }
+            });
 
-            const convRobo = (parseFloat(document.getElementById('convRobo').value) || 0) / 100;
-            const rateCardRobo = (parseFloat(document.getElementById('rateCardRobo').value) || 0) / 100;
-            const rateSbpRobo = (parseFloat(document.getElementById('rateSbpRobo').value) || 0) / 100;
+            if (hasError) {
+                alert("Пожалуйста, заполните все поля корректными числами. Буквы и пустые поля не допускаются.");
+                return; // Останавливаем расчет, пока не исправят!
+            }
 
-            const convComp = (parseFloat(document.getElementById('convComp').value) || 0) / 100;
-            const rateCardComp = (parseFloat(document.getElementById('rateCardComp').value) || 0) / 100;
-            const rateSbpComp = (parseFloat(document.getElementById('rateSbpComp').value) || 0) / 100;
+            // 2. ЕСЛИ ВСЕ ОК - СЧИТАЕМ
+            const turnover = parseFloat(document.getElementById('turnover').value);
+            const avgCheck = parseFloat(document.getElementById('avgCheck').value);
+            const shareCard = parseFloat(document.getElementById('shareCard').value) / 100;
+            const shareSbp = parseFloat(document.getElementById('shareSbp').value) / 100;
+
+            const convRobo = parseFloat(document.getElementById('convRobo').value) / 100;
+            const rateCardRobo = parseFloat(document.getElementById('rateCardRobo').value) / 100;
+            const rateSbpRobo = parseFloat(document.getElementById('rateSbpRobo').value) / 100;
+
+            const convComp = parseFloat(document.getElementById('convComp').value) / 100;
+            const rateCardComp = parseFloat(document.getElementById('rateCardComp').value) / 100;
+            const rateSbpComp = parseFloat(document.getElementById('rateSbpComp').value) / 100;
 
             const roboMetrics = calculateProviderMetrics(turnover, avgCheck, shareCard, shareSbp, convRobo, rateCardRobo, rateSbpRobo);
             const compMetrics = calculateProviderMetrics(turnover, avgCheck, shareCard, shareSbp, convComp, rateCardComp, rateSbpComp);
@@ -408,22 +449,32 @@
             document.getElementById('resProfitRobo').innerText = formatNumber(roboMetrics.profit);
             document.getElementById('resProfitComp').innerText = formatNumber(compMetrics.profit);
 
-            const diff = calculateProfitDifference(roboMetrics.profit, compMetrics.profit);
-            const diffEl = document.getElementById('profitDiff');
+            // 3. ВЫВОДИТ ИТОГИ (МЕСЯЦ И ГОД)
+            const diffMonth = roboMetrics.profit - compMetrics.profit;
+            const diffYear = diffMonth * 12;
             
-            if (diff >= 0) {
-                diffEl.innerText = '✦ Ваша выгода: + ' + formatNumber(diff) + ' ₽';
-                diffEl.style.color = 'var(--rk-success)';
-                diffEl.style.background = 'var(--rk-success-bg)';
-                diffEl.style.borderColor = '#B2ECDA';
+            const diffBlock = document.getElementById('profitDiff');
+            const diffMain = document.getElementById('profitMain');
+            const diffYearText = document.getElementById('profitYear');
+            
+            if (diffMonth >= 0) {
+                diffMain.innerText = '✦ Ваша выгода: + ' + formatNumber(diffMonth) + ' ₽ в мес.';
+                diffYearText.innerText = 'или + ' + formatNumber(diffYear) + ' ₽ в год';
+                
+                diffBlock.style.color = 'var(--rk-success)';
+                diffBlock.style.background = 'var(--rk-success-bg)';
+                diffBlock.style.borderColor = '#B2ECDA';
             } else {
-                diffEl.innerText = '✦ Разница: ' + formatNumber(diff) + ' ₽';
-                diffEl.style.color = 'var(--rk-danger)';
-                diffEl.style.background = 'var(--rk-danger-bg)';
-                diffEl.style.borderColor = '#F5B8BE';
+                diffMain.innerText = '✦ Разница: ' + formatNumber(diffMonth) + ' ₽ в мес.';
+                diffYearText.innerText = 'или ' + formatNumber(diffYear) + ' ₽ в год';
+                
+                diffBlock.style.color = 'var(--rk-danger)';
+                diffBlock.style.background = 'var(--rk-danger-bg)';
+                diffBlock.style.borderColor = '#F5B8BE';
             }
         }
 
+        // Запускаем 1 раз при старте
         calculate();
     </script>
 </body>
