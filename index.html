@@ -63,13 +63,8 @@
         .container {
             max-width: 860px;
             margin: 0 auto;
-            /* Белый фон для всего контейнера, чтобы PDF был красивым */
             background: var(--rk-bg); 
-        }
-
-        /* Специальный класс для скрытия элементов при печати в PDF */
-        .no-print {
-            /* Стили не меняем, класс нужен только как метка для скрипта */
+            padding-bottom: 20px;
         }
 
         .calc-title {
@@ -162,11 +157,9 @@
             background-color: var(--rk-danger-bg) !important;
         }
 
-        .buttons-wrapper {
+        .btn-calc-wrapper {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
+            justify-content: center;
             margin: 24px 0 32px;
         }
 
@@ -188,29 +181,6 @@
         .btn-calc:hover {
             background-color: var(--rk-blue-hover);
             transform: translateY(-2px);
-        }
-
-        /* Стили для новой кнопки PDF */
-        .btn-pdf {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            max-width: 320px;
-            background-color: transparent;
-            color: var(--rk-blue);
-            border: 1.5px solid var(--rk-blue);
-            padding: 14px;
-            font-size: 15px;
-            font-weight: 600;
-            border-radius: var(--rk-radius-sm);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-pdf:hover {
-            background-color: var(--rk-blue-light);
         }
 
         .results-section {
@@ -257,6 +227,7 @@
         .results-table td:first-child {
             text-align: left;
             color: var(--rk-text-muted);
+            white-space: nowrap; 
         }
 
         .results-table tr.highlight { background: var(--rk-blue-light); }
@@ -288,12 +259,43 @@
             opacity: 0.9;
         }
 
+        .btn-pdf-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn-pdf {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 320px;
+            background-color: transparent;
+            color: var(--rk-blue);
+            border: 1.5px solid var(--rk-blue);
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: var(--rk-radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-pdf:hover {
+            background-color: var(--rk-blue-light);
+        }
+
         @media (max-width: 640px) {
             body { padding: 20px 16px; }
             .rk-logo-img { height: 16px; }
             .calc-title h1 { font-size: 24px; }
             .section, .col-card, .results-section { padding: 20px 16px; }
             .grid-2, .grid-2-col { grid-template-columns: 1fr; gap: 12px; }
+            .results-table td { padding: 12px 10px; font-size: 13.5px; }
+            .results-table td:first-child { font-size: 13px; }
+            .profit-main { font-size: 18px; }
         }
     </style>
 </head>
@@ -365,17 +367,8 @@
             </div>
         </div>
 
-        <div class="buttons-wrapper no-print">
+        <div class="btn-calc-wrapper no-print">
             <button class="btn-calc" onclick="calculate()">Рассчитать выгоду</button>
-            <button class="btn-pdf" id="pdfBtn" onclick="generatePDF()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="12" y1="18" x2="12" y2="12"></line>
-                    <line x1="9" y1="15" x2="15" y2="15"></line>
-                </svg>
-                Сохранить КП в PDF
-            </button>
         </div>
 
         <div class="results-section">
@@ -418,6 +411,18 @@
             <div class="profit-diff" id="profitDiff">
                 <div class="profit-main" id="profitMain">✦ Дополнительная прибыль: 0 ₽</div>
                 <div class="profit-year" id="profitYear"></div>
+            </div>
+            
+            <div class="btn-pdf-wrapper no-print">
+                <button class="btn-pdf" id="pdfBtn" onclick="generatePDF()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                    Сохранить КП в PDF
+                </button>
             </div>
         </div>
     </div>
@@ -510,39 +515,44 @@
             }
         }
 
-        // --- НОВАЯ ФУНКЦИЯ ДЛЯ PDF ---
         function generatePDF() {
-            // Обязательно сначала пересчитываем, чтобы данные были свежими
             calculate(); 
             
             const element = document.getElementById('capture-area');
             const btn = document.getElementById('pdfBtn');
-            const originalText = btn.innerHTML; // Запоминаем текст с иконкой
+            const originalText = btn.innerHTML;
             
-            // Меняем текст на кнопке, пока идет загрузка
             btn.innerHTML = 'Создаем документ... ⏳';
             
-            // Настройки для библиотеки html2pdf
+            // ХИТРОСТЬ ДЛЯ ПК: Временно фиксируем ширину контейнера, чтобы избежать обрезки по краям
+            const originalMargin = element.style.margin;
+            const originalMaxWidth = element.style.maxWidth;
+            const originalWidth = element.style.width;
+            
+            element.style.margin = '0';
+            element.style.maxWidth = '100%';
+            element.style.width = '800px'; // Идеальная ширина для А4
+            
             const opt = {
-                margin:       [10, 10, 10, 10], // Отступы на листе А4
+                margin:       10, // Отступы (в мм)
                 filename:     'Коммерческое_предложение_Robokassa.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true }, // Высокое качество
+                html2canvas:  { scale: 2, useCORS: true }, 
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                // Игнорируем элементы с классом no-print (наши кнопки)
                 ignoreElements: function(el) {
-                    return el.classList.contains('no-print');
+                    return el.classList && el.classList.contains('no-print');
                 }
             };
 
-            // Запускаем магию
             html2pdf().set(opt).from(element).save().then(() => {
-                // Возвращаем текст кнопке
                 btn.innerHTML = originalText;
+                // Возвращаем верстку обратно в исходное состояние
+                element.style.margin = originalMargin;
+                element.style.maxWidth = originalMaxWidth;
+                element.style.width = originalWidth;
             });
         }
 
-        // Запускаем расчет 1 раз при старте
         calculate();
     </script>
 </body>
