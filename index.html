@@ -40,9 +40,11 @@
 
         .container { max-width: 860px; margin: 0 auto; }
 
+        /* Логотип ВСЕГДА СЛЕВА */
         .rk-header { display: flex; justify-content: flex-start; margin-bottom: 24px; width: 100%; }
         .rk-logo { height: 16px; width: auto; display: block; }
 
+        /* Заголовок ПО ЦЕНТРУ */
         .calc-title { text-align: center; margin-bottom: 32px; width: 100%; }
         .calc-title h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--rk-dark); }
         .calc-title p { font-size: 15px; color: var(--rk-muted); }
@@ -62,6 +64,7 @@
         label { display: block; font-size: 11px; font-weight: 500; color: var(--rk-muted); margin-bottom: 6px; }
         input { width: 100%; padding: 10px; border: 1.5px solid var(--rk-border); border-radius: 8px; background: var(--rk-bg); font-family: var(--rk-font); font-size: 14px; font-weight: 500; }
 
+        /* Кнопки ПО ЦЕНТРУ */
         .btn-wrap { display: flex; justify-content: center; width: 100%; margin: 24px 0; }
         .btn-main { width: 100%; max-width: 300px; background: var(--rk-blue); color: #fff; border: none; padding: 15px; font-size: 16px; font-weight: 600; border-radius: 10px; cursor: pointer; }
 
@@ -85,40 +88,40 @@
             .calc-title h1 { font-size: 24px; }
         }
 
-        /* ОПТИМИЗАЦИЯ ПЕЧАТИ */
+        /* ─── МАГИЯ ДЛЯ ПЕЧАТИ (ПОДВАЛ ВНИЗУ) ─── */
         @media print {
-            @page { size: A4 portrait; margin: 5mm; } /* Уменьшили поля, чтобы влезло */
-            body { background: white !important; padding: 0 !important; }
+            @page { size: A4 portrait; margin: 10mm; }
+            body { background: white !important; padding: 0 !important; margin: 0 !important; }
             .no-print { display: none !important; }
             
+            /* Растягиваем контейнер на высоту листа */
             .container { 
                 max-width: 100% !important; 
-                transform: scale(0.92); /* Чуть сильнее сжали для надежности */
-                transform-origin: top center; 
+                min-height: 275mm; /* Высота листа А4 с учетом отступов */
+                display: flex !important;
+                flex-direction: column !important;
+                transform: scale(0.95);
+                transform-origin: top center;
             }
 
             .section, .card, .results { 
                 box-shadow: none !important; 
                 border: 1px solid #E2E7F1 !important; 
-                margin-bottom: 6px !important; 
-                padding: 12px 18px !important;
+                margin-bottom: 8px !important; 
             }
 
-            .calc-title { margin-bottom: 10px !important; }
-            .calc-title h1 { font-size: 20px !important; }
-            h3 { margin-bottom: 8px !important; font-size: 10px !important; }
-            .input-group { margin-bottom: 4px !important; }
-            .res-table td, .res-table th { padding: 5px 8px !important; font-size: 11px !important; }
-
+            /* ЭТОТ БЛОК ПРИЖИМАЕТ ПОДВАЛ К НИЗУ */
             .print-footer { 
                 display: flex !important; 
                 justify-content: space-between; 
-                margin-top: 10px; 
-                padding-top: 10px; 
+                margin-top: auto !important; /* Вся магия здесь */
+                padding-top: 15px; 
                 border-top: 1px solid #E2E7F1; 
-                font-size: 8.5px; 
+                font-size: 10px; 
                 color: #6B7394; 
+                line-height: 1.4;
             }
+            .footer-col { flex: 1; }
             
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
@@ -193,7 +196,8 @@
             ИНН 5047063929 / КПП 771601001
         </div>
         <div class="footer-col" style="text-align:center;">
-            115054, г. Москва, Стремянный переулок д. 26
+            115054, г. Москва,<br>
+            Стремянный переулок д. 26
         </div>
         <div class="footer-col" style="text-align:right;">
             8 (499) 110-57-25<br>
