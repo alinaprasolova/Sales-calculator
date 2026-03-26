@@ -7,6 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         /* ─── Дизайн-токены Robokassa ───────────────────────────── */
         :root {
@@ -43,17 +46,16 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Выравнивание и размер логотипа */
         .rk-header {
             max-width: 860px;
             margin: 0 auto 24px;
             display: flex;
             align-items: center;
-            justify-content: center; /* Центрируем логотип */
+            justify-content: flex-start;
         }
 
         .rk-logo-img {
-            height: 24px; /* Уменьшили для ПК */
+            height: 20px;
             width: auto;
             display: block;
         }
@@ -61,6 +63,13 @@
         .container {
             max-width: 860px;
             margin: 0 auto;
+            /* Белый фон для всего контейнера, чтобы PDF был красивым */
+            background: var(--rk-bg); 
+        }
+
+        /* Специальный класс для скрытия элементов при печати в PDF */
+        .no-print {
+            /* Стили не меняем, класс нужен только как метка для скрипта */
         }
 
         .calc-title {
@@ -148,17 +157,22 @@
             box-shadow: 0 0 0 3px rgba(82, 95, 251, 0.12);
         }
         
-        /* Класс для подсветки ошибки */
         input.error-field {
             border-color: var(--rk-danger) !important;
             background-color: var(--rk-danger-bg) !important;
         }
 
+        .buttons-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0 32px;
+        }
+
         .btn-calc {
-            display: block;
             width: 100%;
             max-width: 320px;
-            margin: 24px auto 32px;
             background-color: var(--rk-blue);
             color: var(--rk-white);
             border: none;
@@ -174,6 +188,29 @@
         .btn-calc:hover {
             background-color: var(--rk-blue-hover);
             transform: translateY(-2px);
+        }
+
+        /* Стили для новой кнопки PDF */
+        .btn-pdf {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 320px;
+            background-color: transparent;
+            color: var(--rk-blue);
+            border: 1.5px solid var(--rk-blue);
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: var(--rk-radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-pdf:hover {
+            background-color: var(--rk-blue-light);
         }
 
         .results-section {
@@ -253,21 +290,20 @@
 
         @media (max-width: 640px) {
             body { padding: 20px 16px; }
-            .rk-logo-img { height: 20px; } /* Еще меньше для телефона */
+            .rk-logo-img { height: 16px; }
             .calc-title h1 { font-size: 24px; }
             .section, .col-card, .results-section { padding: 20px 16px; }
             .grid-2, .grid-2-col { grid-template-columns: 1fr; gap: 12px; }
-            .btn-calc { max-width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <header class="rk-header">
-        <img src="logo_robokassa_black.png" alt="Robokassa" class="rk-logo-img">
-    </header>
+    <div class="container" id="capture-area">
+        <header class="rk-header">
+            <img src="logo_robokassa_black.png" alt="Robokassa" class="rk-logo-img">
+        </header>
 
-    <div class="container">
         <div class="calc-title">
             <h1>Калькулятор выгоды мерчанта</h1>
             <p>Сравните условия и узнайте свою реальную выгоду</p>
@@ -329,7 +365,18 @@
             </div>
         </div>
 
-        <button class="btn-calc" onclick="calculate()">Рассчитать выгоду</button>
+        <div class="buttons-wrapper no-print">
+            <button class="btn-calc" onclick="calculate()">Рассчитать выгоду</button>
+            <button class="btn-pdf" id="pdfBtn" onclick="generatePDF()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+                Сохранить КП в PDF
+            </button>
+        </div>
 
         <div class="results-section">
             <h3>Сравнение результатов</h3>
@@ -376,14 +423,12 @@
     </div>
 
     <script>
-        // Блокируем ввод некоторых спецсимволов с клавиатуры
         function restrictInput(event) {
             if (['e', 'E', '+', '-'].includes(event.key)) {
                 event.preventDefault();
             }
         }
         
-        // Убираем красную рамку, как только юзер начинает исправлять ошибку
         function clearError(element) {
             element.classList.remove('error-field');
         }
@@ -401,12 +446,10 @@
         }
 
         function calculate() {
-            // 1. ВАЛИДАЦИЯ (ПРОВЕРКА НА ОШИБКИ)
             const allInputs = document.querySelectorAll('input[type="number"]');
             let hasError = false;
             
             allInputs.forEach(input => {
-                // Если пустое или не является числом
                 if (input.value.trim() === '' || isNaN(input.value)) {
                     input.classList.add('error-field');
                     hasError = true;
@@ -417,10 +460,9 @@
 
             if (hasError) {
                 alert("Пожалуйста, заполните все поля корректными числами. Буквы и пустые поля не допускаются.");
-                return; // Останавливаем расчет, пока не исправят!
+                return;
             }
 
-            // 2. ЕСЛИ ВСЕ ОК - СЧИТАЕМ
             const turnover = parseFloat(document.getElementById('turnover').value);
             const avgCheck = parseFloat(document.getElementById('avgCheck').value);
             const shareCard = parseFloat(document.getElementById('shareCard').value) / 100;
@@ -439,17 +481,13 @@
 
             document.getElementById('resOpsRobo').innerText = formatNumber(roboMetrics.ops);
             document.getElementById('resOpsComp').innerText = formatNumber(compMetrics.ops);
-            
             document.getElementById('resPayRobo').innerText = formatNumber(roboMetrics.pay);
             document.getElementById('resPayComp').innerText = formatNumber(compMetrics.pay);
-            
             document.getElementById('resFeeRobo').innerText = formatNumber(roboMetrics.fee);
             document.getElementById('resFeeComp').innerText = formatNumber(compMetrics.fee);
-            
             document.getElementById('resProfitRobo').innerText = formatNumber(roboMetrics.profit);
             document.getElementById('resProfitComp').innerText = formatNumber(compMetrics.profit);
 
-            // 3. ВЫВОДИТ ИТОГИ (МЕСЯЦ И ГОД)
             const diffMonth = roboMetrics.profit - compMetrics.profit;
             const diffYear = diffMonth * 12;
             
@@ -460,21 +498,51 @@
             if (diffMonth >= 0) {
                 diffMain.innerText = '✦ Ваша выгода: + ' + formatNumber(diffMonth) + ' ₽ в мес.';
                 diffYearText.innerText = 'или + ' + formatNumber(diffYear) + ' ₽ в год';
-                
                 diffBlock.style.color = 'var(--rk-success)';
                 diffBlock.style.background = 'var(--rk-success-bg)';
                 diffBlock.style.borderColor = '#B2ECDA';
             } else {
                 diffMain.innerText = '✦ Разница: ' + formatNumber(diffMonth) + ' ₽ в мес.';
                 diffYearText.innerText = 'или ' + formatNumber(diffYear) + ' ₽ в год';
-                
                 diffBlock.style.color = 'var(--rk-danger)';
                 diffBlock.style.background = 'var(--rk-danger-bg)';
                 diffBlock.style.borderColor = '#F5B8BE';
             }
         }
 
-        // Запускаем 1 раз при старте
+        // --- НОВАЯ ФУНКЦИЯ ДЛЯ PDF ---
+        function generatePDF() {
+            // Обязательно сначала пересчитываем, чтобы данные были свежими
+            calculate(); 
+            
+            const element = document.getElementById('capture-area');
+            const btn = document.getElementById('pdfBtn');
+            const originalText = btn.innerHTML; // Запоминаем текст с иконкой
+            
+            // Меняем текст на кнопке, пока идет загрузка
+            btn.innerHTML = 'Создаем документ... ⏳';
+            
+            // Настройки для библиотеки html2pdf
+            const opt = {
+                margin:       [10, 10, 10, 10], // Отступы на листе А4
+                filename:     'Коммерческое_предложение_Robokassa.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true }, // Высокое качество
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                // Игнорируем элементы с классом no-print (наши кнопки)
+                ignoreElements: function(el) {
+                    return el.classList.contains('no-print');
+                }
+            };
+
+            // Запускаем магию
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Возвращаем текст кнопке
+                btn.innerHTML = originalText;
+            });
+        }
+
+        // Запускаем расчет 1 раз при старте
         calculate();
     </script>
 </body>
