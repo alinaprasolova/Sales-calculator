@@ -105,9 +105,7 @@
         .profit-main { font-size: 22px; font-weight: 700; }
         .profit-year { font-size: 15px; font-weight: 500; margin-top: 6px; opacity: 0.9; }
 
-        /* Блок с кнопкой экспорта */
         .export-actions { display: flex; justify-content: center; margin-top: 24px; }
-        
         .btn-export { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 24px; font-size: 15px; font-weight: 600; border-radius: var(--rk-radius-sm); cursor: pointer; transition: all 0.2s ease; border: 1.5px solid var(--rk-blue); background: transparent; color: var(--rk-blue); max-width: 320px; width: 100%; }
         .btn-export:hover { background-color: var(--rk-blue-light); }
 
@@ -122,19 +120,54 @@
             .profit-main { font-size: 18px; }
         }
 
-        /* ─── МАГИЯ ДЛЯ ИДЕАЛЬНОГО ПЕЧАТНОГО PDF ─── */
+        /* ─── ЖЕСТКОЕ СЖАТИЕ ДЛЯ ИДЕАЛЬНОГО PDF (ВМЕЩАЕМ НА 1 ЛИСТ) ─── */
         @media print {
+            /* Задаем А4 и минимальные поля для принтера */
+            @page { size: A4 portrait; margin: 8mm; }
+            
             body { background: white !important; padding: 0 !important; margin: 0 !important; }
             .container { background: white !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; }
-            /* Скрываем кнопки на распечатке */
+            
+            /* Скрываем лишнее */
             .no-print, .btn-calc-wrapper, .export-actions { display: none !important; }
-            /* Убираем тени и делаем четкие границы для бумаги */
-            .section, .col-card, .results-section { box-shadow: none !important; border: 1px solid #ddd !important; break-inside: avoid; margin-bottom: 20px !important; }
-            /* Заставляем браузер печатать фоновые цвета (зеленую плашку и синюю строку) */
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            /* Выстраиваем карточки конкурентов ровно пополам */
-            .grid-2-col { display: flex !important; gap: 20px !important; }
+            
+            /* Сжимаем шапку и заголовок */
+            .rk-header { margin-bottom: 12px !important; }
+            .rk-logo-img { height: 18px !important; }
+            .calc-title { margin-bottom: 16px !important; }
+            .calc-title h1 { font-size: 20px !important; margin-bottom: 4px !important; }
+            .calc-title p { font-size: 12px !important; margin-bottom: 0 !important; }
+            
+            /* Сильно уменьшаем отступы внутри карточек */
+            .section, .col-card, .results-section { 
+                padding: 12px 16px !important; 
+                margin-bottom: 12px !important; 
+                box-shadow: none !important; 
+                border: 1px solid #E2E7F1 !important; 
+            }
+            
+            /* Сжимаем поля ввода */
+            h3 { font-size: 11px !important; margin-bottom: 10px !important; }
+            .input-group { margin-bottom: 6px !important; }
+            label { font-size: 10px !important; margin-bottom: 2px !important; }
+            input[type="number"] { padding: 6px 10px !important; font-size: 13px !important; border: 1px solid #E2E7F1 !important; }
+            
+            /* Уплотняем сетку */
+            .grid-2 { gap: 10px !important; }
+            .grid-2-col { display: flex !important; gap: 12px !important; margin-bottom: 12px !important; }
             .col-card { flex: 1 !important; }
+            
+            /* Ужимаем таблицу */
+            .results-table td { padding: 8px 10px !important; font-size: 12px !important; }
+            .results-table thead th { padding: 0 10px 8px !important; font-size: 10px !important; }
+            
+            /* Сжимаем финальный блок выгоды */
+            .profit-diff { margin-top: 12px !important; padding: 12px !important; }
+            .profit-main { font-size: 18px !important; }
+            .profit-year { font-size: 12px !important; margin-top: 2px !important; }
+            
+            /* Принудительная печать фонов (чтобы зеленая плашка осталась зеленой) */
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
     </style>
 </head>
