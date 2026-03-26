@@ -8,8 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
     <style>
         /* ─── Дизайн-токены Robokassa ───────────────────────────── */
         :root {
@@ -54,11 +52,7 @@
             justify-content: flex-start;
         }
 
-        .rk-logo-img {
-            height: 20px;
-            width: auto;
-            display: block;
-        }
+        .rk-logo-img { height: 20px; width: auto; display: block; }
 
         .container {
             max-width: 860px;
@@ -67,225 +61,55 @@
             padding-bottom: 20px;
         }
 
-        .calc-title {
-            text-align: center;
-            margin-bottom: 32px;
-        }
+        .calc-title { text-align: center; margin-bottom: 32px; }
+        .calc-title h1 { font-size: 28px; font-weight: 700; color: var(--rk-dark); letter-spacing: -0.5px; line-height: 1.25; margin-bottom: 8px; }
+        .calc-title p { font-size: 15px; color: var(--rk-text-muted); }
 
-        .calc-title h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--rk-dark);
-            letter-spacing: -0.5px;
-            line-height: 1.25;
-            margin-bottom: 8px;
-        }
-
-        .calc-title p {
-            font-size: 15px;
-            color: var(--rk-text-muted);
-        }
-
-        .section {
-            background: var(--rk-white);
-            border: 1px solid var(--rk-border);
-            border-radius: var(--rk-radius-lg);
-            padding: 28px 32px;
-            margin-bottom: 16px;
-            box-shadow: var(--rk-shadow-sm);
-        }
-
-        h3 {
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--rk-text-muted);
-            margin-bottom: 20px;
-        }
+        .section { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius-lg); padding: 28px 32px; margin-bottom: 16px; box-shadow: var(--rk-shadow-sm); }
+        h3 { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--rk-text-muted); margin-bottom: 20px; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 
-        .col-card {
-            background: var(--rk-white);
-            border: 1px solid var(--rk-border);
-            border-radius: var(--rk-radius-lg);
-            padding: 28px;
-            box-shadow: var(--rk-shadow-sm);
-        }
-
+        .col-card { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius-lg); padding: 28px; box-shadow: var(--rk-shadow-sm); }
         .col-card.col-you { border-top: 3px solid var(--rk-blue); }
         .col-card.col-comp { border-top: 3px solid var(--rk-border); }
-
         .col-card h3 { color: var(--rk-text-muted); }
         .col-card.col-you h3 { color: var(--rk-blue); }
 
         .input-group { margin-bottom: 14px; }
         .input-group:last-child { margin-bottom: 0; }
+        label { display: block; font-size: 12.5px; font-weight: 500; color: var(--rk-text-muted); margin-bottom: 6px; }
 
-        label {
-            display: block;
-            font-size: 12.5px;
-            font-weight: 500;
-            color: var(--rk-text-muted);
-            margin-bottom: 6px;
-        }
+        input[type="number"] { width: 100%; padding: 11px 14px; border: 1.5px solid var(--rk-border); border-radius: var(--rk-radius-sm); background: var(--rk-bg); color: var(--rk-text); font-family: var(--rk-font); font-size: 15px; font-weight: 500; transition: all var(--rk-transition); }
+        input[type="number"]:focus { outline: none; border-color: var(--rk-blue); background: var(--rk-white); box-shadow: 0 0 0 3px rgba(82, 95, 251, 0.12); }
+        input.error-field { border-color: var(--rk-danger) !important; background-color: var(--rk-danger-bg) !important; }
 
-        input[type="number"] {
-            width: 100%;
-            padding: 11px 14px;
-            border: 1.5px solid var(--rk-border);
-            border-radius: var(--rk-radius-sm);
-            background: var(--rk-bg);
-            color: var(--rk-text);
-            font-family: var(--rk-font);
-            font-size: 15px;
-            font-weight: 500;
-            transition: all var(--rk-transition);
-        }
+        .btn-calc-wrapper { display: flex; justify-content: center; margin: 24px 0 32px; }
+        .btn-calc { width: 100%; max-width: 320px; background-color: var(--rk-blue); color: var(--rk-white); border: none; padding: 16px; font-size: 16px; font-weight: 600; border-radius: var(--rk-radius-sm); cursor: pointer; box-shadow: 0 4px 12px rgba(82, 95, 251, 0.3); transition: all 0.2s ease; }
+        .btn-calc:hover { background-color: var(--rk-blue-hover); transform: translateY(-2px); }
 
-        input[type="number"]:focus {
-            outline: none;
-            border-color: var(--rk-blue);
-            background: var(--rk-white);
-            box-shadow: 0 0 0 3px rgba(82, 95, 251, 0.12);
-        }
-        
-        input.error-field {
-            border-color: var(--rk-danger) !important;
-            background-color: var(--rk-danger-bg) !important;
-        }
-
-        .btn-calc-wrapper {
-            display: flex;
-            justify-content: center;
-            margin: 24px 0 32px;
-        }
-
-        .btn-calc {
-            width: 100%;
-            max-width: 320px;
-            background-color: var(--rk-blue);
-            color: var(--rk-white);
-            border: none;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: var(--rk-radius-sm);
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(82, 95, 251, 0.3);
-            transition: all 0.2s ease;
-        }
-
-        .btn-calc:hover {
-            background-color: var(--rk-blue-hover);
-            transform: translateY(-2px);
-        }
-
-        .results-section {
-            background: var(--rk-white);
-            border: 1px solid var(--rk-border);
-            border-radius: var(--rk-radius-lg);
-            padding: 28px 32px;
-            box-shadow: var(--rk-shadow-sm);
-        }
-
-        .table-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .results-table {
-            width: 100%;
-            min-width: 500px;
-            border-collapse: collapse;
-        }
-
-        .results-table thead th {
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--rk-text-muted);
-            padding: 0 14px 12px;
-            text-align: center;
-            border-bottom: 2px solid var(--rk-border);
-        }
-
+        .results-section { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius-lg); padding: 28px 32px; box-shadow: var(--rk-shadow-sm); }
+        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .results-table { width: 100%; min-width: 500px; border-collapse: collapse; }
+        .results-table thead th { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--rk-text-muted); padding: 0 14px 12px; text-align: center; border-bottom: 2px solid var(--rk-border); }
         .results-table thead th:first-child { text-align: left; }
-
         .results-table tbody tr { border-bottom: 1px solid var(--rk-border); }
         .results-table tbody tr:last-child { border-bottom: none; }
-
-        .results-table td {
-            padding: 13px 14px;
-            font-size: 14.5px;
-            text-align: center;
-        }
-
-        .results-table td:first-child {
-            text-align: left;
-            color: var(--rk-text-muted);
-            white-space: nowrap; 
-        }
-
+        .results-table td { padding: 13px 14px; font-size: 14.5px; text-align: center; }
+        .results-table td:first-child { text-align: left; color: var(--rk-text-muted); white-space: nowrap; }
         .results-table tr.highlight { background: var(--rk-blue-light); }
         .results-table tr.highlight td { font-weight: 700; color: var(--rk-blue); }
 
-        .profit-diff {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: var(--rk-radius-md);
-            background: var(--rk-success-bg);
-            color: var(--rk-success);
-            border: 1.5px solid #B2ECDA;
-            text-align: center;
-        }
+        .profit-diff { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; padding: 20px; border-radius: var(--rk-radius-md); background: var(--rk-success-bg); color: var(--rk-success); border: 1.5px solid #B2ECDA; text-align: center; }
+        .profit-main { font-size: 22px; font-weight: 700; }
+        .profit-year { font-size: 15px; font-weight: 500; margin-top: 6px; opacity: 0.9; }
+
+        /* Блок с кнопкой экспорта */
+        .export-actions { display: flex; justify-content: center; margin-top: 24px; }
         
-        .profit-main {
-            font-size: 22px;
-            font-weight: 700;
-        }
-        
-        .profit-year {
-            font-size: 15px;
-            font-weight: 500;
-            margin-top: 6px;
-            opacity: 0.9;
-        }
-
-        .btn-pdf-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-top: 24px;
-        }
-
-        .btn-pdf {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            max-width: 320px;
-            background-color: transparent;
-            color: var(--rk-blue);
-            border: 1.5px solid var(--rk-blue);
-            padding: 14px;
-            font-size: 15px;
-            font-weight: 600;
-            border-radius: var(--rk-radius-sm);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-pdf:hover {
-            background-color: var(--rk-blue-light);
-        }
+        .btn-export { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 24px; font-size: 15px; font-weight: 600; border-radius: var(--rk-radius-sm); cursor: pointer; transition: all 0.2s ease; border: 1.5px solid var(--rk-blue); background: transparent; color: var(--rk-blue); max-width: 320px; width: 100%; }
+        .btn-export:hover { background-color: var(--rk-blue-light); }
 
         @media (max-width: 640px) {
             body { padding: 20px 16px; }
@@ -297,11 +121,26 @@
             .results-table td:first-child { font-size: 13px; }
             .profit-main { font-size: 18px; }
         }
+
+        /* ─── МАГИЯ ДЛЯ ИДЕАЛЬНОГО ПЕЧАТНОГО PDF ─── */
+        @media print {
+            body { background: white !important; padding: 0 !important; margin: 0 !important; }
+            .container { background: white !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; }
+            /* Скрываем кнопки на распечатке */
+            .no-print, .btn-calc-wrapper, .export-actions { display: none !important; }
+            /* Убираем тени и делаем четкие границы для бумаги */
+            .section, .col-card, .results-section { box-shadow: none !important; border: 1px solid #ddd !important; break-inside: avoid; margin-bottom: 20px !important; }
+            /* Заставляем браузер печатать фоновые цвета (зеленую плашку и синюю строку) */
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            /* Выстраиваем карточки конкурентов ровно пополам */
+            .grid-2-col { display: flex !important; gap: 20px !important; }
+            .col-card { flex: 1 !important; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container" id="capture-area">
+    <div class="container">
         <header class="rk-header">
             <img src="logo_robokassa_black.png" alt="Robokassa" class="rk-logo-img">
         </header>
@@ -413,15 +252,16 @@
                 <div class="profit-year" id="profitYear"></div>
             </div>
             
-            <div class="btn-pdf-wrapper no-print">
-                <button class="btn-pdf" id="pdfBtn" onclick="generatePDF()">
+            <div class="export-actions no-print">
+                <button class="btn-export" onclick="window.print()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="12" y1="18" x2="12" y2="12"></line>
-                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
-                    Сохранить КП в PDF
+                    Сохранить в PDF
                 </button>
             </div>
         </div>
@@ -513,44 +353,6 @@
                 diffBlock.style.background = 'var(--rk-danger-bg)';
                 diffBlock.style.borderColor = '#F5B8BE';
             }
-        }
-
-        function generatePDF() {
-            calculate(); 
-            
-            const element = document.getElementById('capture-area');
-            const btn = document.getElementById('pdfBtn');
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = 'Создаем документ... ⏳';
-            
-            // ХИТРОСТЬ ДЛЯ ПК: Временно фиксируем ширину контейнера, чтобы избежать обрезки по краям
-            const originalMargin = element.style.margin;
-            const originalMaxWidth = element.style.maxWidth;
-            const originalWidth = element.style.width;
-            
-            element.style.margin = '0';
-            element.style.maxWidth = '100%';
-            element.style.width = '800px'; // Идеальная ширина для А4
-            
-            const opt = {
-                margin:       10, // Отступы (в мм)
-                filename:     'Коммерческое_предложение_Robokassa.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true }, 
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                ignoreElements: function(el) {
-                    return el.classList && el.classList.contains('no-print');
-                }
-            };
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                btn.innerHTML = originalText;
-                // Возвращаем верстку обратно в исходное состояние
-                element.style.margin = originalMargin;
-                element.style.maxWidth = originalMaxWidth;
-                element.style.width = originalWidth;
-            });
         }
 
         calculate();
