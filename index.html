@@ -40,12 +40,12 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Контейнер для логотипа — строго слева */
+        /* Шапка с логотипом слева */
         .rk-header {
             max-width: 860px;
             margin: 0 auto 24px;
             display: flex;
-            justify-content: flex-start; /* Логотип прижат к левому краю */
+            justify-content: flex-start;
             width: 100%;
         }
         .rk-logo-img { height: 16px; width: auto; display: block; }
@@ -57,7 +57,6 @@
             flex-direction: column;
         }
 
-        /* Заголовок — по центру */
         .calc-title { text-align: center; margin-bottom: 32px; width: 100%; }
         .calc-title h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--rk-dark); }
         .calc-title p { font-size: 15px; color: var(--rk-text-muted); }
@@ -79,8 +78,7 @@
         input[type="number"] { width: 100%; padding: 11px; border: 1.5px solid var(--rk-border); border-radius: 8px; background: var(--rk-bg); font-family: var(--rk-font); font-size: 15px; font-weight: 500; }
 
         .btn-calc-wrapper { display: flex; justify-content: center; margin: 24px 0; }
-        .btn-calc { width: 100%; max-width: 320px; background: var(--rk-blue); color: #fff; border: none; padding: 16px; font-size: 16px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
-        .btn-calc:hover { background: var(--rk-blue-hover); }
+        .btn-calc { width: 100%; max-width: 320px; background: var(--rk-blue); color: #fff; border: none; padding: 16px; font-size: 16px; font-weight: 600; border-radius: 8px; cursor: pointer; }
 
         .results-section { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius-lg); padding: 28px; }
         .results-table { width: 100%; border-collapse: collapse; }
@@ -93,10 +91,9 @@
         .profit-main { font-size: 20px; font-weight: 700; }
         .profit-year { font-size: 14px; margin-top: 4px; opacity: 0.9; }
 
-        .btn-export { display: block; width: 100%; max-width: 320px; margin: 24px auto 0; padding: 14px; border: 1.5px solid var(--rk-blue); background: none; color: var(--rk-blue); font-weight: 600; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.2s; }
-        .btn-export:hover { background: var(--rk-blue-light); }
+        .btn-export { display: block; width: 100%; max-width: 320px; margin: 24px auto 0; padding: 14px; border: 1.5px solid var(--rk-blue); background: none; color: var(--rk-blue); font-weight: 600; border-radius: 8px; cursor: pointer; text-align: center; }
 
-        /* Элементы только для PDF */
+        /* Подвал только для PDF */
         .pdf-footer { display: none; }
 
         @media screen and (max-width: 640px) {
@@ -105,12 +102,17 @@
             .calc-title h1 { font-size: 24px; }
         }
 
-        /* Настройки для генерации PDF */
-        .pdf-mode { background: white !important; padding: 10mm !important; width: 195mm !important; }
+        /* Настройки для чистого PDF без лишних разрывов */
+        .pdf-mode { background: white !important; padding: 15mm !important; width: 210mm !important; }
         .pdf-mode .no-print { display: none !important; }
         .pdf-mode .pdf-footer { 
-            display: flex !important; justify-content: space-between; font-size: 10px; color: #6B7394; 
-            margin-top: auto; padding-top: 15px; border-top: 1px solid #E2E7F1; 
+            display: flex !important; 
+            justify-content: space-between; 
+            font-size: 10px; 
+            color: #6B7394; 
+            margin-top: 30px; 
+            padding-top: 15px; 
+            border-top: 1px solid #E2E7F1; 
         }
     </style>
 </head>
@@ -228,16 +230,25 @@
             btn.innerText = "Подготовка...";
             element.classList.add('pdf-mode');
 
+            // Настройки для предотвращения разрыва на 2 страницы
             const opt = {
                 margin: 0,
                 filename: 'КП_Robokassa.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, logging: false },
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true, 
+                    logging: false,
+                    scrollY: 0,
+                    windowWidth: document.documentElement.offsetWidth
+                },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
             try {
-                await html2pdf().set(opt).from(element).save();
+                // Генерируем PDF из контента
+                const worker = html2pdf().set(opt).from(element);
+                await worker.save();
             } finally {
                 element.classList.remove('pdf-mode');
                 btn.innerText = "Скачать КП в PDF";
