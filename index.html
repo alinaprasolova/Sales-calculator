@@ -170,29 +170,15 @@
             
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
-            /* ─── ПРАВИЛО ДЛЯ ПЕЧАТИ: ПОКАЗАТЬ ПОДВАЛ ─── */
+            /* ─── ПРАВИЛО ДЛЯ ПЕЧАТИ: ПОКАЗАТЬ ПОДВАЛ ПО ЦЕНТРУ ─── */
             .print-only-footer {
-                display: flex !important;
-                justify-content: space-between !important;
-                align-items: center !important;
-                background-color: var(--rk-blue) !important;
-                color: var(--rk-white) !important;
-                padding: 16px 24px !important;
-                border-radius: var(--rk-radius-sm) !important;
-                margin-top: auto !important; /* Прижимаем к самому низу листа А4 */
-                margin-bottom: 0 !important;
-            }
-            
-            .footer-site {
-                font-size: 18px !important;
-                font-weight: 700 !important;
-            }
-            
-            .footer-slogan {
-                font-size: 12px !important;
+                display: block !important;
+                text-align: center !important;
+                color: var(--rk-text-muted) !important;
+                font-size: 14px !important;
                 font-weight: 500 !important;
-                text-align: right !important;
-                line-height: 1.4 !important;
+                margin-top: auto !important; /* Прижимает текст к самому низу листа А4 */
+                padding: 20px 0 10px 0 !important;
             }
         }
     </style>
@@ -328,8 +314,7 @@
         </div>
         
         <div class="print-only-footer">
-            <div class="footer-site">robokassa.com</div>
-            <div class="footer-slogan">Подключим за 1 день.<br>И больше никаких «Ой, не проходит».</div>
+            robokassa.com
         </div>
 
     </div>
