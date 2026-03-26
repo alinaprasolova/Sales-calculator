@@ -3,111 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор конверсии</title>
+    <title>Калькулятор сравнения выгоды</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #f4f7f6; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
         }
-        .calculator { 
-            background: white; 
-            padding: 30px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            width: 100%; 
-            max-width: 400px; 
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        h2 { 
+        h1, h2, h3 { 
             text-align: center; 
-            color: #333; 
-            margin-top: 0; 
+            color: #1a73e8; 
+            margin-bottom: 20px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .section {
             margin-bottom: 25px;
+            padding: 20px;
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            border-radius: 8px;
         }
-        .input-group { 
-            margin-bottom: 15px; 
+        .input-group {
+            margin-bottom: 12px;
         }
-        label { 
-            display: block; 
-            margin-bottom: 5px; 
-            color: #666; 
-            font-size: 14px; 
+        label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 4px;
         }
-        input { 
-            width: 100%; 
-            padding: 10px; 
-            border: 1px solid #ccc; 
-            border-radius: 6px; 
-            box-sizing: border-box; 
-            font-size: 16px; 
-            outline: none;
-            transition: border-color 0.3s;
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 15px;
         }
         input:focus {
             border-color: #1a73e8;
+            outline: none;
         }
-        .result { 
-            margin-top: 25px; 
-            padding: 15px; 
-            background-color: #e8f0fe; 
-            border-radius: 6px; 
-            text-align: center; 
-            font-size: 18px; 
-            color: #1a73e8; 
-            line-height: 1.5;
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .results-table th, .results-table td {
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .results-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        .highlight {
+            background-color: #e8f0fe;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+        .profit-diff {
+            text-align: center;
+            font-size: 22px;
+            margin-top: 25px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 8px;
+            background: #e6f4ea;
+            color: #1e8e3e;
+        }
+        @media (max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Калькулятор выгоды мерчанта</h1>
+        
+        <div class="section">
+            <h3>Вводные данные</h3>
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>Оборот (попытки оплат), ₽</label>
+                    <input type="number" id="turnover" value="2000000" oninput="calculate()">
+                </div>
+                <div class="input-group">
+                    <label>Средний чек, ₽</label>
+                    <input type="number" id="avgCheck" value="6000" oninput="calculate()">
+                </div>
+                <div class="input-group">
+                    <label>Доля оплат Картами РФ, %</label>
+                    <input type="number" id="shareCard" value="70" oninput="calculate()">
+                </div>
+                <div class="input-group">
+                    <label>Доля оплат через СБП, %</label>
+                    <input type="number" id="shareSbp" value="50" oninput="calculate()">
+                </div>
+            </div>
+        </div>
 
-    <div class="calculator">
-        <h2>Расчет конверсии</h2>
-        
-        <div class="input-group">
-            <label>Трафик (посетители):</label>
-            <input type="number" id="traffic" value="1000" oninput="calculate()">
+        <div class="grid-2">
+            <div class="section">
+                <h3>Ваши условия</h3>
+                <div class="input-group">
+                    <label>Конверсия успешных оплат, %</label>
+                    <input type="number" id="convRobo" value="98" oninput="calculate()">
+                </div>
+                <div class="input-group">
+                    <label>Ставка: Карты РФ, %</label>
+                    <input type="number" id="rateCardRobo" value="3.9" step="0.1" oninput="calculate()">
+                </div>
+                <div class="input-group">
+                    <label>Ставка: СБП, %</label>
+                    <input type="number" id="rateSbpRobo" value="2.7" step="0.1" oninput="calculate()">
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Условия конкурента</h3>
+                <div class="input-group">
+                    <label>Конверсия успешных оплат, %</label>
+                    <input type="number" id="convComp" value="90" oninput="calculate()">
+                </div>
+                <div class="input-group">
+                    <label>Ставка: Карты РФ, %</label>
+                    <input type="number" id="rateCardComp" value="3.5" step="0.1" oninput="calculate()">
+                </div>
+                <div class="input-group">
+                    <label>Ставка: СБП, %</label>
+                    <input type="number" id="rateSbpComp" value="3.5" step="0.1" oninput="calculate()">
+                </div>
+            </div>
         </div>
-        
-        <div class="input-group">
-            <label>Конверсия в продажу (%):</label>
-            <input type="number" id="conversion" value="5" oninput="calculate()">
-        </div>
-        
-        <div class="input-group">
-            <label>Средний чек (₽):</label>
-            <input type="number" id="avgCheck" value="5000" oninput="calculate()">
-        </div>
-        
-        <div class="result" id="totalResult">
-            Количество продаж: 50<br>
-            <strong>Выручка: 250 000 ₽</strong>
+
+        <div class="section">
+            <h3>Сравнение результатов</h3>
+            <table class="results-table">
+                <tr>
+                    <th>Показатель</th>
+                    <th>Вы</th>
+                    <th>Конкурент</th>
+                </tr>
+                <tr>
+                    <td>Успешных операций, шт.</td>
+                    <td id="resOpsRobo">0</td>
+                    <td id="resOpsComp">0</td>
+                </tr>
+                <tr>
+                    <td>Успешные платежи, ₽</td>
+                    <td id="resPayRobo">0</td>
+                    <td id="resPayComp">0</td>
+                </tr>
+                <tr>
+                    <td>Затраты на комиссию, ₽</td>
+                    <td id="resFeeRobo">0</td>
+                    <td id="resFeeComp">0</td>
+                </tr>
+                <tr class="highlight">
+                    <td>Прибыль мерчанта, ₽</td>
+                    <td id="resProfitRobo">0</td>
+                    <td id="resProfitComp">0</td>
+                </tr>
+            </table>
+            
+            <div class="profit-diff" id="profitDiff">
+                Дополнительная прибыль: 0 ₽
+            </div>
         </div>
     </div>
 
     <script>
-        function calculate() {
-            // Получаем данные из полей
-            const traffic = document.getElementById('traffic').value;
-            const conversion = document.getElementById('conversion').value;
-            const avgCheck = document.getElementById('avgCheck').value;
-
-            // Считаем формулы
-            const sales = (traffic * (conversion / 100));
-            const revenue = sales * avgCheck;
-
-            // Выводим результат
-            document.getElementById('totalResult').innerHTML =
-                'Количество продаж: ' + Math.round(sales) + '<br>' +
-                '<strong>Выручка: ' + revenue.toLocaleString('ru-RU') + ' ₽</strong>';
+        // Функция для красивого форматирования чисел (с пробелами тысяч)
+        function formatNumber(num) {
+            return Math.round(num).toLocaleString('ru-RU');
         }
-        
-        // Запускаем расчет сразу при открытии
+
+        function calculate() {
+            // Считываем общие данные
+            const turnover = parseFloat(document.getElementById('turnover').value) || 0;
+            const avgCheck = parseFloat(document.getElementById('avgCheck').value) || 0;
+            const shareCard = (parseFloat(document.getElementById('shareCard').value) || 0) / 100;
+            const shareSbp = (parseFloat(document.getElementById('shareSbp').value) || 0) / 100;
+
+            // Считываем данные Robokassa
+            const convRobo = (parseFloat(document.getElementById('convRobo').value) || 0) / 100;
+            const rateCardRobo = (parseFloat(document.getElementById('rateCardRobo').value) || 0) / 100;
+            const rateSbpRobo = (parseFloat(document.getElementById('rateSbpRobo').value) || 0) / 100;
+
+            // Считываем данные Конкурента
+            const convComp = (parseFloat(document.getElementById('convComp').value) || 0) / 100;
+            const rateCardComp = (parseFloat(document.getElementById('rateCardComp').value) || 0) / 100;
+            const rateSbpComp = (parseFloat(document.getElementById('rateSbpComp').value) || 0) / 100;
+
+            // Расчеты Robokassa
+            const opsRobo = avgCheck > 0 ? (turnover / avgCheck) * convRobo : 0;
+            const payRobo = turnover * convRobo;
+            const feeRobo = payRobo * (shareCard * rateCardRobo + shareSbp * rateSbpRobo);
+            const profitRobo = payRobo - feeRobo;
+
+            // Расчеты Конкурента
+            const opsComp = avgCheck > 0 ? (turnover / avgCheck) * convComp : 0;
+            const payComp = turnover * convComp;
+            const feeComp = payComp * (shareCard * rateCardComp + shareSbp * rateSbpComp);
+            const profitComp = payComp - feeComp;
+
+            // Заполняем таблицу результатами
+            document.getElementById('resOpsRobo').innerText = formatNumber(opsRobo);
+            document.getElementById('resOpsComp').innerText = formatNumber(opsComp);
+            
+            document.getElementById('resPayRobo').innerText = formatNumber(payRobo);
+            document.getElementById('resPayComp').innerText = formatNumber(payComp);
+            
+            document.getElementById('resFeeRobo').innerText = formatNumber(feeRobo);
+            document.getElementById('resFeeComp').innerText = formatNumber(feeComp);
+            
+            document.getElementById('resProfitRobo').innerText = formatNumber(profitRobo);
+            document.getElementById('resProfitComp').innerText = formatNumber(profitComp);
+
+            // Считаем и выводим итоговую разницу (выгоду)
+            const diff = profitRobo - profitComp;
+            const diffEl = document.getElementById('profitDiff');
+            
+            if (diff >= 0) {
+                diffEl.innerText = 'Ваша выгода: + ' + formatNumber(diff) + ' ₽';
+                diffEl.style.color = '#1e8e3e';
+                diffEl.style.background = '#e6f4ea';
+            } else {
+                diffEl.innerText = 'Разница: ' + formatNumber(diff) + ' ₽';
+                diffEl.style.color = '#d93025';
+                diffEl.style.background = '#fce8e6';
+            }
+        }
+
+        // Запускаем скрипт сразу при открытии страницы
         calculate();
     </script>
-
 </body>
 </html>
