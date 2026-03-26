@@ -38,13 +38,11 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .container { max-width: 860px; margin: 0 auto; }
+        .container { max-width: 860px; margin: 0 auto; position: relative; }
 
-        /* Логотип ВСЕГДА СЛЕВА */
         .rk-header { display: flex; justify-content: flex-start; margin-bottom: 24px; width: 100%; }
         .rk-logo { height: 16px; width: auto; display: block; }
 
-        /* Заголовок ПО ЦЕНТРУ */
         .calc-title { text-align: center; margin-bottom: 32px; width: 100%; }
         .calc-title h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--rk-dark); }
         .calc-title p { font-size: 15px; color: var(--rk-muted); }
@@ -64,7 +62,6 @@
         label { display: block; font-size: 11px; font-weight: 500; color: var(--rk-muted); margin-bottom: 6px; }
         input { width: 100%; padding: 10px; border: 1.5px solid var(--rk-border); border-radius: 8px; background: var(--rk-bg); font-family: var(--rk-font); font-size: 14px; font-weight: 500; }
 
-        /* Кнопки ПО ЦЕНТРУ */
         .btn-wrap { display: flex; justify-content: center; width: 100%; margin: 24px 0; }
         .btn-main { width: 100%; max-width: 300px; background: var(--rk-blue); color: #fff; border: none; padding: 15px; font-size: 16px; font-weight: 600; border-radius: 10px; cursor: pointer; }
 
@@ -85,36 +82,37 @@
         @media (max-width: 640px) {
             .grid-inputs, .grid-cards { grid-template-columns: 1fr; }
             .rk-logo { height: 14px; }
-            .calc-title h1 { font-size: 24px; }
         }
 
-        /* ─── МАГИЯ ДЛЯ ПЕЧАТИ (ПОДВАЛ ВНИЗУ) ─── */
+        /* ─── ФИНАЛЬНАЯ МАГИЯ ДЛЯ ПЕЧАТИ ─── */
         @media print {
             @page { size: A4 portrait; margin: 10mm; }
             body { background: white !important; padding: 0 !important; margin: 0 !important; }
             .no-print { display: none !important; }
             
-            /* Растягиваем контейнер на высоту листа */
+            /* Контейнер на весь лист */
             .container { 
                 max-width: 100% !important; 
-                min-height: 275mm; /* Высота листа А4 с учетом отступов */
-                display: flex !important;
-                flex-direction: column !important;
-                transform: scale(0.95);
+                height: 270mm !important; /* Ровно высота страницы за вычетом отступов */
+                position: relative !important;
+                margin: 0 !important;
+                transform: scale(0.96); /* Легкое сжатие для страховки */
                 transform-origin: top center;
             }
 
             .section, .card, .results { 
                 box-shadow: none !important; 
                 border: 1px solid #E2E7F1 !important; 
-                margin-bottom: 8px !important; 
             }
 
-            /* ЭТОТ БЛОК ПРИЖИМАЕТ ПОДВАЛ К НИЗУ */
+            /* ЖЕСТКОЕ ПРИБИТИЕ К НИЗУ */
             .print-footer { 
                 display: flex !important; 
                 justify-content: space-between; 
-                margin-top: auto !important; /* Вся магия здесь */
+                position: absolute !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
                 padding-top: 15px; 
                 border-top: 1px solid #E2E7F1; 
                 font-size: 10px; 
