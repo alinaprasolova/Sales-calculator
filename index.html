@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Калькулятор выгоды компании — Robokassa</title>
+    <title>Калькулятор выгоды — Robokassa</title>
 
     <link rel="icon" type="image/png" href="v-rk-32.png">
 
@@ -38,32 +38,22 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .container {
-            max-width: 860px;
-            margin: 0 auto;
-        }
+        .container { max-width: 860px; margin: 0 auto; }
 
-        /* Логотип СЛЕВА */
-        .rk-header {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 24px;
-            width: 100%;
-        }
+        .rk-header { display: flex; justify-content: flex-start; margin-bottom: 24px; width: 100%; }
         .rk-logo { height: 16px; width: auto; display: block; }
 
-        /* Заголовок ПО ЦЕНТРУ */
         .calc-title { text-align: center; margin-bottom: 32px; width: 100%; }
         .calc-title h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--rk-dark); }
         .calc-title p { font-size: 15px; color: var(--rk-muted); }
 
-        .section { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 28px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .section { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 28px; margin-bottom: 16px; }
         h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--rk-muted); margin-bottom: 20px; letter-spacing: 0.5px; }
 
         .grid-inputs, .grid-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .grid-cards { margin-bottom: 16px; }
 
-        .card { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .card { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 24px; }
         .card.robo { border-top: 3px solid var(--rk-blue); }
         .card.robo h3 { color: var(--rk-blue); }
         .card.comp { border-top: 3px solid var(--rk-border); }
@@ -72,12 +62,10 @@
         label { display: block; font-size: 11px; font-weight: 500; color: var(--rk-muted); margin-bottom: 6px; }
         input { width: 100%; padding: 10px; border: 1.5px solid var(--rk-border); border-radius: 8px; background: var(--rk-bg); font-family: var(--rk-font); font-size: 14px; font-weight: 500; }
 
-        /* Кнопки ПО ЦЕНТРУ */
         .btn-wrap { display: flex; justify-content: center; width: 100%; margin: 24px 0; }
-        .btn-main { width: 100%; max-width: 300px; background: var(--rk-blue); color: #fff; border: none; padding: 15px; font-size: 16px; font-weight: 600; border-radius: 10px; cursor: pointer; transition: 0.2s; }
-        .btn-main:hover { background: var(--rk-blue-hover); }
+        .btn-main { width: 100%; max-width: 300px; background: var(--rk-blue); color: #fff; border: none; padding: 15px; font-size: 16px; font-weight: 600; border-radius: 10px; cursor: pointer; }
 
-        .results { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .results { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 28px; }
         .res-table { width: 100%; border-collapse: collapse; }
         .res-table th { font-size: 11px; color: var(--rk-muted); padding: 10px; border-bottom: 2px solid var(--rk-border); text-align: center; }
         .res-table td { padding: 12px 10px; font-size: 14px; text-align: center; border-bottom: 1px solid var(--rk-border); }
@@ -89,7 +77,6 @@
 
         .btn-pdf { display: block; width: 100%; max-width: 300px; margin: 24px auto 0; padding: 12px; border: 1.5px solid var(--rk-blue); background: white; color: var(--rk-blue); font-weight: 600; border-radius: 10px; cursor: pointer; text-align: center; }
 
-        /* Футер для бланка */
         .print-footer { display: none; }
 
         @media (max-width: 640px) {
@@ -98,28 +85,41 @@
             .calc-title h1 { font-size: 24px; }
         }
 
-        /* ─── НАСТРОЙКИ ПЕЧАТИ ─── */
+        /* ОПТИМИЗАЦИЯ ПЕЧАТИ */
         @media print {
-            @page { size: A4 portrait; margin: 10mm; }
+            @page { size: A4 portrait; margin: 5mm; } /* Уменьшили поля, чтобы влезло */
             body { background: white !important; padding: 0 !important; }
             .no-print { display: none !important; }
-            .container { max-width: 100% !important; }
-            .section, .card, .results { box-shadow: none !important; border: 1px solid #E2E7F1 !important; margin-bottom: 10px !important; }
             
-            /* Показываем футер только при печати */
+            .container { 
+                max-width: 100% !important; 
+                transform: scale(0.92); /* Чуть сильнее сжали для надежности */
+                transform-origin: top center; 
+            }
+
+            .section, .card, .results { 
+                box-shadow: none !important; 
+                border: 1px solid #E2E7F1 !important; 
+                margin-bottom: 6px !important; 
+                padding: 12px 18px !important;
+            }
+
+            .calc-title { margin-bottom: 10px !important; }
+            .calc-title h1 { font-size: 20px !important; }
+            h3 { margin-bottom: 8px !important; font-size: 10px !important; }
+            .input-group { margin-bottom: 4px !important; }
+            .res-table td, .res-table th { padding: 5px 8px !important; font-size: 11px !important; }
+
             .print-footer { 
                 display: flex !important; 
                 justify-content: space-between; 
-                margin-top: 30px; 
-                padding-top: 15px; 
+                margin-top: 10px; 
+                padding-top: 10px; 
                 border-top: 1px solid #E2E7F1; 
-                font-size: 10px; 
+                font-size: 8.5px; 
                 color: #6B7394; 
-                line-height: 1.4;
             }
-            .footer-col { flex: 1; }
             
-            /* Чтобы цвета (синий/зеленый) не пропадали в PDF */
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
     </style>
@@ -132,7 +132,7 @@
     </header>
 
     <div class="calc-title">
-        <h1>Калькулятор выгоды компании</h1>
+        <h1>Калькулятор выгоды</h1>
         <p>Сравните условия и узнайте свою реальную выгоду</p>
     </div>
 
@@ -193,8 +193,7 @@
             ИНН 5047063929 / КПП 771601001
         </div>
         <div class="footer-col" style="text-align:center;">
-            115054, г. Москва,<br>
-            Стремянный переулок д. 26
+            115054, г. Москва, Стремянный переулок д. 26
         </div>
         <div class="footer-col" style="text-align:right;">
             8 (499) 110-57-25<br>
@@ -235,8 +234,6 @@
         document.getElementById('profit-main').innerText = '✦ Ваша выгода: + ' + fNum(d) + ' ₽ в мес.';
         document.getElementById('profit-year').innerText = 'или + ' + fNum(d * 12) + ' ₽ в год';
     }
-
-    // Запускаем расчет сразу при загрузке
     calculate();
 </script>
 </body>
