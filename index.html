@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Калькулятор сравнения выгоды — Robokassa</title>
+    <title>Калькулятор выгоды компании — Robokassa</title>
     
     <link rel="icon" type="image/png" href="v-rk-32.png">
     
@@ -47,7 +47,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Логотип слева наверху, размер еще меньше */
         .rk-header {
             max-width: 860px;
             margin: 0 auto 24px;
@@ -67,7 +66,6 @@
             min-height: calc(100vh - 100px);
         }
 
-        /* Заголовок по центру */
         .calc-title { text-align: center; margin-bottom: 32px; }
         .calc-title h1 { font-size: 28px; font-weight: 700; color: var(--rk-dark); letter-spacing: -0.5px; line-height: 1.25; margin-bottom: 8px; }
         .calc-title p { font-size: 15px; color: var(--rk-text-muted); }
@@ -90,22 +88,18 @@
 
         input[type="number"] { width: 100%; padding: 11px 14px; border: 1.5px solid var(--rk-border); border-radius: var(--rk-radius-sm); background: var(--rk-bg); color: var(--rk-text); font-family: var(--rk-font); font-size: 15px; font-weight: 500; transition: all var(--rk-transition); }
         input[type="number"]:focus { outline: none; border-color: var(--rk-blue); background: var(--rk-white); box-shadow: 0 0 0 3px rgba(82, 95, 251, 0.12); }
-        input.error-field { border-color: var(--rk-danger) !important; background-color: var(--rk-danger-bg) !important; }
-
-        /* Кнопка расчета по центру */
+        
         .btn-calc-wrapper { display: flex; justify-content: center; margin: 24px 0 32px; }
         .btn-calc { width: 100%; max-width: 320px; background-color: var(--rk-blue); color: var(--rk-white); border: none; padding: 16px; font-size: 16px; font-weight: 600; border-radius: var(--rk-radius-sm); cursor: pointer; box-shadow: 0 4px 12px rgba(82, 95, 251, 0.3); transition: all 0.2s ease; }
         .btn-calc:hover { background-color: var(--rk-blue-hover); transform: translateY(-2px); }
 
         .results-section { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius-lg); padding: 28px 32px; box-shadow: var(--rk-shadow-sm); }
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .results-table { width: 100%; min-width: 500px; border-collapse: collapse; }
+        .results-table { width: 100%; border-collapse: collapse; }
         .results-table thead th { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--rk-text-muted); padding: 0 14px 12px; text-align: center; border-bottom: 2px solid var(--rk-border); }
         .results-table thead th:first-child { text-align: left; }
-        .results-table tbody tr { border-bottom: 1px solid var(--rk-border); }
-        .results-table tbody tr:last-child { border-bottom: none; }
+        .results-table tr { border-bottom: 1px solid var(--rk-border); }
         .results-table td { padding: 13px 14px; font-size: 14.5px; text-align: center; }
-        .results-table td:first-child { text-align: left; color: var(--rk-text-muted); white-space: nowrap; }
+        .results-table td:first-child { text-align: left; color: var(--rk-text-muted); }
         .results-table tr.highlight { background: var(--rk-blue-light); }
         .results-table tr.highlight td { font-weight: 700; color: var(--rk-blue); }
 
@@ -113,325 +107,179 @@
         .profit-main { font-size: 22px; font-weight: 700; }
         .profit-year { font-size: 15px; font-weight: 500; margin-top: 6px; opacity: 0.9; }
 
-        /* Кнопка экспорта по центру */
         .export-actions { display: flex; justify-content: center; margin-top: 24px; }
         .btn-export { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 24px; font-size: 15px; font-weight: 600; border-radius: var(--rk-radius-sm); cursor: pointer; transition: all 0.2s ease; border: 1.5px solid var(--rk-blue); background: transparent; color: var(--rk-blue); max-width: 320px; width: 100%; }
-        .btn-export:hover { background-color: var(--rk-blue-light); }
 
-        /* ─── ПРАВИЛО ДЛЯ ЭКРАНА: СКРЫТЬ ПОДВАЛ ─── */
-        @media screen {
-            .print-only-footer {
-                display: none !important;
-            }
-        }
+        @media screen { .print-only-footer { display: none !important; } }
 
-        @media (max-width: 640px) {
-            body { padding: 20px 16px; }
-            .rk-logo-img { height: 12px; } /* Крошечный логотип для мобилок */
-            .calc-title h1 { font-size: 24px; }
-            .section, .col-card, .results-section { padding: 20px 16px; }
-            .grid-2, .grid-2-col { grid-template-columns: 1fr; gap: 12px; }
-            .results-table td { padding: 12px 10px; font-size: 13.5px; }
-            .results-table td:first-child { font-size: 13px; }
-            .profit-main { font-size: 18px; }
-        }
-
-        /* ─── МАГИЯ ДЛЯ ИДЕАЛЬНОГО ПЕЧАТНОГО PDF ─── */
         @media print {
             @page { size: A4 portrait; margin: 8mm; }
-            
-            body { background: white !important; padding: 0 !important; margin: 0 !important; }
-            .container { background: white !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; display: flex; flex-direction: column; min-height: 277mm; }
-            
+            body { background: white !important; }
             .no-print, .btn-calc-wrapper, .export-actions { display: none !important; }
-            
-            .rk-header { margin-bottom: 12px !important; }
-            .rk-logo-img { height: 16px !important; }
-            .calc-title { margin-bottom: 16px !important; }
-            .calc-title h1 { font-size: 20px !important; margin-bottom: 4px !important; }
-            .calc-title p { font-size: 12px !important; margin-bottom: 0 !important; }
-            
-            .section, .col-card, .results-section { 
-                padding: 12px 16px !important; 
-                margin-bottom: 12px !important; 
-                box-shadow: none !important; 
-                border: 1px solid #E2E7F1 !important; 
-            }
-            
-            h3 { font-size: 11px !important; margin-bottom: 10px !important; }
-            .input-group { margin-bottom: 6px !important; }
-            label { font-size: 10px !important; margin-bottom: 2px !important; }
-            input[type="number"] { padding: 6px 10px !important; font-size: 13px !important; border: 1px solid #E2E7F1 !important; }
-            
-            .grid-2 { gap: 10px !important; }
-            .grid-2-col { display: flex !important; gap: 12px !important; margin-bottom: 12px !important; }
-            .col-card { flex: 1 !important; }
-            
-            .results-table td { padding: 8px 10px !important; font-size: 12px !important; }
-            .results-table thead th { padding: 0 10px 8px !important; font-size: 10px !important; }
-            
-            .profit-diff { margin-top: 12px !important; padding: 12px !important; }
-            .profit-main { font-size: 18px !important; }
-            .profit-year { font-size: 12px !important; margin-top: 2px !important; }
-            
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-
-            /* ─── ПРАВИЛО ДЛЯ ПЕЧАТИ: ОФИЦИАЛЬНЫЙ БЛАНК (РЕКВИЗИТЫ) ─── */
-            .print-only-footer {
-                display: flex !important;
-                justify-content: space-between !important;
-                align-items: flex-start !important;
-                font-size: 10px !important;
-                color: var(--rk-text-muted) !important;
-                margin-top: auto !important; /* Прижимает текст к самому низу листа А4 */
-                padding-top: 12px !important;
-                border-top: 1px solid var(--rk-border) !important;
-                text-align: left !important;
-                line-height: 1.4 !important;
-            }
-            
+            .container { background: white !important; min-height: 277mm; }
+            .section, .col-card, .results-section { box-shadow: none !important; border: 1px solid #E2E7F1 !important; }
+            .print-only-footer { display: flex !important; justify-content: space-between !important; font-size: 10px !important; color: var(--rk-text-muted) !important; margin-top: auto !important; padding-top: 12px !important; border-top: 1px solid var(--rk-border) !important; line-height: 1.4 !important; }
             .footer-col { flex: 1 !important; }
             .footer-col.center { text-align: center !important; }
             .footer-col.right { text-align: right !important; }
-            .footer-col strong { color: var(--rk-text) !important; font-size: 11px !important; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="content-wrapper">
-            <header class="rk-header">
-                <img src="logo_robokassa_black.png" alt="Robokassa" class="rk-logo-img">
-            </header>
+        <header class="rk-header">
+            <img src="logo_robokassa_black.png" alt="Robokassa" class="rk-logo-img">
+        </header>
 
-            <div class="calc-title">
-                <h1>Калькулятор выгоды мерчанта</h1>
-                <p>Сравните условия и узнайте свою реальную выгоду</p>
-            </div>
-            
-            <div class="section">
-                <h3>Вводные данные (в месяц)</h3>
-                <div class="grid-2">
-                    <div class="input-group">
-                        <label>Оборот (попытки оплат), ₽</label>
-                        <input type="number" id="turnover" value="2000000" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Средний чек, ₽</label>
-                        <input type="number" id="avgCheck" value="6000" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Доля оплат Картами РФ, %</label>
-                        <input type="number" id="shareCard" value="70" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Доля оплат через СБП, %</label>
-                        <input type="number" id="shareSbp" value="50" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid-2-col">
-                <div class="col-card col-you">
-                    <h3>Ваши условия (Robokassa)</h3>
-                    <div class="input-group">
-                        <label>Конверсия успешных оплат, %</label>
-                        <input type="number" id="convRobo" value="98" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Ставка: Карты РФ, %</label>
-                        <input type="number" id="rateCardRobo" value="3.9" step="0.1" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Ставка: СБП, %</label>
-                        <input type="number" id="rateSbpRobo" value="2.7" step="0.1" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                </div>
-
-                <div class="col-card col-comp">
-                    <h3>Условия конкурента</h3>
-                    <div class="input-group">
-                        <label>Конверсия успешных оплат, %</label>
-                        <input type="number" id="convComp" value="90" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Ставка: Карты РФ, %</label>
-                        <input type="number" id="rateCardComp" value="3.5" step="0.1" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                    <div class="input-group">
-                        <label>Ставка: СБП, %</label>
-                        <input type="number" id="rateSbpComp" value="3.5" step="0.1" inputmode="decimal" onkeydown="restrictInput(event)" oninput="clearError(this)">
-                    </div>
-                </div>
-            </div>
-
-            <div class="btn-calc-wrapper no-print">
-                <button class="btn-calc" onclick="calculate()">Рассчитать выгоду</button>
-            </div>
-
-            <div class="results-section">
-                <h3>Сравнение результатов</h3>
-                
-                <div class="table-wrapper">
-                    <table class="results-table">
-                        <thead>
-                            <tr>
-                                <th>Показатель</th>
-                                <th style="color: var(--rk-blue);">Robokassa</th>
-                                <th>Конкурент</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Успешных операций, шт.</td>
-                                <td id="resOpsRobo">0</td>
-                                <td id="resOpsComp">0</td>
-                            </tr>
-                            <tr>
-                                <td>Успешные платежи, ₽</td>
-                                <td id="resPayRobo">0</td>
-                                <td id="resPayComp">0</td>
-                            </tr>
-                            <tr>
-                                <td>Затраты на комиссию, ₽</td>
-                                <td id="resFeeRobo">0</td>
-                                <td id="resFeeComp">0</td>
-                            </tr>
-                            <tr class="highlight">
-                                <td>Прибыль мерчанта (в мес.), ₽</td>
-                                <td id="resProfitRobo">0</td>
-                                <td id="resProfitComp">0</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="profit-diff" id="profitDiff">
-                    <div class="profit-main" id="profitMain">✦ Дополнительная прибыль: 0 ₽</div>
-                    <div class="profit-year" id="profitYear"></div>
-                </div>
-                
-                <div class="export-actions no-print">
-                    <button class="btn-export" onclick="window.print()">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                            <polyline points="10 9 9 9 8 9"></polyline>
-                        </svg>
-                        Сохранить в PDF
-                    </button>
-                </div>
-            </div>
+        <div class="calc-title">
+            <h1>Калькулятор выгоды компании</h1>
+            <p>Сравните условия и узнайте свою реальную выгоду</p>
         </div>
         
-        <div class="print-only-footer">
-            <div class="footer-col">
-                <strong>ООО «РОБОКАССА»</strong><br>
-                5047063929 / 771601001
-            </div>
-            <div class="footer-col center">
-                115054, г. Москва,<br>
-                Стремянный переулок д. 26
-            </div>
-            <div class="footer-col right">
-                8 (499) 110-57-25<br>
-                robokassa.com
+        <div class="section">
+            <h3>Вводные данные (в месяц)</h3>
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>Оборот ( месяц ), ₽</label>
+                    <input type="number" id="turnover" value="2000000">
+                </div>
+                <div class="input-group">
+                    <label>Средний чек, ₽</label>
+                    <input type="number" id="avgCheck" value="6000">
+                </div>
+                <div class="input-group">
+                    <label>Доля оплат Картами РФ, %</label>
+                    <input type="number" id="shareCard" value="70">
+                </div>
+                <div class="input-group">
+                    <label>Доля оплат через СБП, %</label>
+                    <input type="number" id="shareSbp" value="50">
+                </div>
             </div>
         </div>
 
+        <div class="grid-2-col">
+            <div class="col-card col-you">
+                <h3>Условия Robokassa</h3>
+                <div class="input-group">
+                    <label>Конверсия успешных оплат, %</label>
+                    <input type="number" id="convRobo" value="98">
+                </div>
+                <div class="input-group">
+                    <label>Ставка: Карты РФ, %</label>
+                    <input type="number" id="rateCardRobo" value="3.9" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label>Ставка: СБП, %</label>
+                    <input type="number" id="rateSbpRobo" value="2.7" step="0.1">
+                </div>
+            </div>
+
+            <div class="col-card col-comp">
+                <h3>Текущий эквайринг</h3>
+                <div class="input-group">
+                    <label>Конверсия успешных оплат, %</label>
+                    <input type="number" id="convComp" value="90">
+                </div>
+                <div class="input-group">
+                    <label>Ставка: Карты РФ, %</label>
+                    <input type="number" id="rateCardComp" value="3.5" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label>Ставка: СБП, %</label>
+                    <input type="number" id="rateSbpComp" value="3.5" step="0.1">
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-calc-wrapper no-print">
+            <button class="btn-calc" onclick="calculate()">Рассчитать выгоду</button>
+        </div>
+
+        <div class="results-section">
+            <h3>Сравнение результатов</h3>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Показатель</th>
+                        <th style="color: var(--rk-blue);">Robokassa</th>
+                        <th>Текущий эквайринг</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Успешных операций, шт.</td>
+                        <td id="resOpsRobo">0</td>
+                        <td id="resOpsComp">0</td>
+                    </tr>
+                    <tr>
+                        <td>Оборот в месяц, ₽</td>
+                        <td id="resPayRobo">0</td>
+                        <td id="resPayComp">0</td>
+                    </tr>
+                    <tr>
+                        <td>Затраты на комиссию, ₽</td>
+                        <td id="resFeeRobo">0</td>
+                        <td id="resFeeComp">0</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Прибыль компании (в мес.), ₽</td>
+                        <td id="resProfitRobo">0</td>
+                        <td id="resProfitComp">0</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="profit-diff" id="profitDiff">
+                <div class="profit-main" id="profitMain">✦ Дополнительная прибыль: 0 ₽</div>
+                <div class="profit-year" id="profitYear"></div>
+            </div>
+            
+            <div class="export-actions no-print">
+                <button class="btn-export" onclick="window.print()">Сохранить в PDF</button>
+            </div>
+        </div>
+
+        <div class="print-only-footer">
+            <div class="footer-col"><strong>ООО «РОБОКАССА»</strong><br>5047063929 / 771601001</div>
+            <div class="footer-col center">115054, г. Москва,<br>Стремянный переулок д. 26</div>
+            <div class="footer-col right">8 (499) 110-57-25<br>robokassa.com</div>
+        </div>
     </div>
 
     <script>
-        function restrictInput(event) {
-            if (['e', 'E', '+', '-'].includes(event.key)) {
-                event.preventDefault();
-            }
-        }
-        
-        function clearError(element) {
-            element.classList.remove('error-field');
-        }
-
-        function formatNumber(num) {
-            return Math.round(num).toLocaleString('ru-RU');
-        }
-
-        function calculateProviderMetrics(turnover, avgCheck, shareCard, shareSbp, convRate, rateCard, rateSbp) {
-            const pay = turnover * convRate;
-            const ops = avgCheck > 0 ? (turnover / avgCheck) * convRate : 0;
-            const fee = pay * (shareCard * rateCard + shareSbp * rateSbp);
-            const profit = pay - fee;
-            return { ops, pay, fee, profit };
-        }
+        function formatNumber(num) { return Math.round(num).toLocaleString('ru-RU'); }
 
         function calculate() {
-            const allInputs = document.querySelectorAll('input[type="number"]');
-            let hasError = false;
-            
-            allInputs.forEach(input => {
-                if (input.value.trim() === '' || isNaN(input.value)) {
-                    input.classList.add('error-field');
-                    hasError = true;
-                } else {
-                    input.classList.remove('error-field');
-                }
-            });
-
-            if (hasError) {
-                alert("Пожалуйста, заполните все поля корректными числами. Буквы и пустые поля не допускаются.");
-                return;
-            }
-
             const turnover = parseFloat(document.getElementById('turnover').value);
             const avgCheck = parseFloat(document.getElementById('avgCheck').value);
             const shareCard = parseFloat(document.getElementById('shareCard').value) / 100;
             const shareSbp = parseFloat(document.getElementById('shareSbp').value) / 100;
 
-            const convRobo = parseFloat(document.getElementById('convRobo').value) / 100;
-            const rateCardRobo = parseFloat(document.getElementById('rateCardRobo').value) / 100;
-            const rateSbpRobo = parseFloat(document.getElementById('rateSbpRobo').value) / 100;
+            const calcMetrics = (conv, rCard, rSbp) => {
+                const pay = turnover * (conv / 100);
+                const ops = avgCheck > 0 ? pay / avgCheck : 0;
+                const fee = pay * (shareCard * (rCard / 100) + shareSbp * (rSbp / 100));
+                return { ops, pay, fee, profit: pay - fee };
+            };
 
-            const convComp = parseFloat(document.getElementById('convComp').value) / 100;
-            const rateCardComp = parseFloat(document.getElementById('rateCardComp').value) / 100;
-            const rateSbpComp = parseFloat(document.getElementById('rateSbpComp').value) / 100;
+            const robo = calcMetrics(parseFloat(document.getElementById('convRobo').value), parseFloat(document.getElementById('rateCardRobo').value), parseFloat(document.getElementById('rateSbpRobo').value));
+            const comp = calcMetrics(parseFloat(document.getElementById('convComp').value), parseFloat(document.getElementById('rateCardComp').value), parseFloat(document.getElementById('rateSbpComp').value));
 
-            const roboMetrics = calculateProviderMetrics(turnover, avgCheck, shareCard, shareSbp, convRobo, rateCardRobo, rateSbpRobo);
-            const compMetrics = calculateProviderMetrics(turnover, avgCheck, shareCard, shareSbp, convComp, rateCardComp, rateSbpComp);
+            document.getElementById('resOpsRobo').innerText = formatNumber(robo.ops);
+            document.getElementById('resOpsComp').innerText = formatNumber(comp.ops);
+            document.getElementById('resPayRobo').innerText = formatNumber(robo.pay);
+            document.getElementById('resPayComp').innerText = formatNumber(comp.pay);
+            document.getElementById('resFeeRobo').innerText = formatNumber(robo.fee);
+            document.getElementById('resFeeComp').innerText = formatNumber(comp.fee);
+            document.getElementById('resProfitRobo').innerText = formatNumber(robo.profit);
+            document.getElementById('resProfitComp').innerText = formatNumber(comp.profit);
 
-            document.getElementById('resOpsRobo').innerText = formatNumber(roboMetrics.ops);
-            document.getElementById('resOpsComp').innerText = formatNumber(compMetrics.ops);
-            document.getElementById('resPayRobo').innerText = formatNumber(roboMetrics.pay);
-            document.getElementById('resPayComp').innerText = formatNumber(compMetrics.pay);
-            document.getElementById('resFeeRobo').innerText = formatNumber(roboMetrics.fee);
-            document.getElementById('resFeeComp').innerText = formatNumber(compMetrics.fee);
-            document.getElementById('resProfitRobo').innerText = formatNumber(roboMetrics.profit);
-            document.getElementById('resProfitComp').innerText = formatNumber(compMetrics.profit);
-
-            const diffMonth = roboMetrics.profit - compMetrics.profit;
-            const diffYear = diffMonth * 12;
-            
-            const diffBlock = document.getElementById('profitDiff');
-            const diffMain = document.getElementById('profitMain');
-            const diffYearText = document.getElementById('profitYear');
-            
-            if (diffMonth >= 0) {
-                diffMain.innerText = '✦ Ваша выгода: + ' + formatNumber(diffMonth) + ' ₽ в мес.';
-                diffYearText.innerText = 'или + ' + formatNumber(diffYear) + ' ₽ в год';
-                diffBlock.style.color = 'var(--rk-success)';
-                diffBlock.style.background = 'var(--rk-success-bg)';
-                diffBlock.style.borderColor = '#B2ECDA';
-            } else {
-                diffMain.innerText = '✦ Разница: ' + formatNumber(diffMonth) + ' ₽ в мес.';
-                diffYearText.innerText = 'или ' + formatNumber(diffYear) + ' ₽ в год';
-                diffBlock.style.color = 'var(--rk-danger)';
-                diffBlock.style.background = 'var(--rk-danger-bg)';
-                diffBlock.style.borderColor = '#F5B8BE';
-            }
+            const diff = robo.profit - comp.profit;
+            document.getElementById('profitMain').innerText = '✦ Ваша выгода: + ' + formatNumber(diff) + ' ₽ в мес.';
+            document.getElementById('profitYear').innerText = 'или + ' + formatNumber(diff * 12) + ' ₽ в год';
         }
-
         calculate();
     </script>
 </body>
