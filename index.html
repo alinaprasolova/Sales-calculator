@@ -50,14 +50,12 @@
             align-items: center;
         }
 
-        .rk-logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--rk-dark);
-            letter-spacing: -0.3px;
+        /* Стили для логотипа картинкой */
+        .rk-logo-img {
+            height: 32px;
+            width: auto;
+            display: block;
         }
-
-        .rk-logo-text span { color: var(--rk-blue); }
 
         .container {
             max-width: 860px;
@@ -248,7 +246,7 @@
 <body>
 
     <header class="rk-header">
-        <div class="rk-logo-text"><span>Robo</span>kassa</div>
+        <img src="logo_robokassa_black.png" alt="Robokassa" class="rk-logo-img">
     </header>
 
     <div class="container">
@@ -359,7 +357,6 @@
     </div>
 
     <script>
-        // 1. УТИЛИТЫ И БАЗОВЫЕ ФУНКЦИИ
         function restrictInput(event) {
             if (['e', 'E', '+', '-'].includes(event.key)) {
                 event.preventDefault();
@@ -370,13 +367,11 @@
             return Math.round(num).toLocaleString('ru-RU');
         }
 
-        // 2. ЧИСТЫЕ ФУНКЦИИ (БИЗНЕС-ЛОГИКА)
         function calculateProviderMetrics(turnover, avgCheck, shareCard, shareSbp, convRate, rateCard, rateSbp) {
             const pay = turnover * convRate;
             const ops = avgCheck > 0 ? (turnover / avgCheck) * convRate : 0;
             const fee = pay * (shareCard * rateCard + shareSbp * rateSbp);
             const profit = pay - fee;
-
             return { ops, pay, fee, profit };
         }
 
@@ -384,15 +379,12 @@
             return profit1 - profit2;
         }
 
-        // 3. ФУНКЦИЯ-КОНТРОЛЛЕР (СВЯЗЬ ИНТЕРФЕЙСА И ЛОГИКИ)
         function calculate() {
-            // Считываем общие данные
             const turnover = parseFloat(document.getElementById('turnover').value) || 0;
             const avgCheck = parseFloat(document.getElementById('avgCheck').value) || 0;
             const shareCard = (parseFloat(document.getElementById('shareCard').value) || 0) / 100;
             const shareSbp = (parseFloat(document.getElementById('shareSbp').value) || 0) / 100;
 
-            // Считываем данные из полей
             const convRobo = (parseFloat(document.getElementById('convRobo').value) || 0) / 100;
             const rateCardRobo = (parseFloat(document.getElementById('rateCardRobo').value) || 0) / 100;
             const rateSbpRobo = (parseFloat(document.getElementById('rateSbpRobo').value) || 0) / 100;
@@ -401,11 +393,9 @@
             const rateCardComp = (parseFloat(document.getElementById('rateCardComp').value) || 0) / 100;
             const rateSbpComp = (parseFloat(document.getElementById('rateSbpComp').value) || 0) / 100;
 
-            // Считаем метрики через чистые функции
             const roboMetrics = calculateProviderMetrics(turnover, avgCheck, shareCard, shareSbp, convRobo, rateCardRobo, rateSbpRobo);
             const compMetrics = calculateProviderMetrics(turnover, avgCheck, shareCard, shareSbp, convComp, rateCardComp, rateSbpComp);
 
-            // Выводим результаты в таблицу
             document.getElementById('resOpsRobo').innerText = formatNumber(roboMetrics.ops);
             document.getElementById('resOpsComp').innerText = formatNumber(compMetrics.ops);
             
@@ -418,7 +408,6 @@
             document.getElementById('resProfitRobo').innerText = formatNumber(roboMetrics.profit);
             document.getElementById('resProfitComp').innerText = formatNumber(compMetrics.profit);
 
-            // Считаем и выводим разницу
             const diff = calculateProfitDifference(roboMetrics.profit, compMetrics.profit);
             const diffEl = document.getElementById('profitDiff');
             
@@ -435,7 +424,6 @@
             }
         }
 
-        // Первичный расчет при загрузке страницы
         calculate();
     </script>
 </body>
