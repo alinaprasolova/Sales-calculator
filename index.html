@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Калькулятор выгоды — Robokassa</title>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -192,7 +193,7 @@
     <div class="container">
 
         <div class="calc-title">
-            <h1>Калькулятор выгоды компании</h1>
+            <h1>Калькулятор выгоды</h1>
             <p>Сравните условия и узнайте свою реальную выгоду</p>
         </div>
 
@@ -384,70 +385,87 @@
         }
     }
 
-    /* ── Генерация PDF (всегда десктопная ширина) ─────────── */
+    /* ── Генерация PDF — один лист, всегда десктопная раскладка ── */
     async function downloadPDF() {
-        const area = document.getElementById("capture-area");
-        const btn  = document.getElementById("download-btn");
+        const area   = document.getElementById("capture-area");
+        const btn    = document.getElementById("download-btn");
         const footer = document.getElementById("pdf-footer");
 
         btn.disabled  = true;
         btn.innerText = "Подготовка PDF…";
 
-        /* 1. Запоминаем исходные стили контейнера */
-        const prevWidth    = area.style.width;
-        const prevMaxWidth = area.style.maxWidth;
-        const prevBg       = area.style.background;
-        const prevPadding  = area.style.padding;
-
-        /* 2. Принудительно устанавливаем ширину 800 px — 
-              html2canvas отрисует именно эту раскладку,
-              независимо от ширины экрана устройства      */
-        area.style.width    = "800px";
-        area.style.maxWidth = "800px";
-        area.style.background = "#ffffff";
-        area.style.padding  = "24px 32px 32px";
-
-        /* 3. Показываем реквизиты и скрываем кнопки */
-        footer.style.display    = "flex";
-        document.querySelectorAll(".no-print").forEach(el => el.style.display = "none");
-
-        /* Короткая пауза — дать браузеру перерисовать layout */
-        await new Promise(r => setTimeout(r, 80));
-
-        const opt = {
-            margin:   0,
-            filename: "КП_Robokassa.pdf",
-            image:    { type: "jpeg", quality: 1 },
-            html2canvas: {
-                scale:       2,          /* 2× для чёткости на ретина */
-                useCORS:     true,
-                logging:     false,
-                scrollX:     0,
-                scrollY:     0,
-                /* Явно говорим html2canvas, какую ширину считать «окном» */
-                windowWidth: 800
-            },
-            jsPDF: {
-                unit:        "mm",
-                format:      "a4",
-                orientation: "portrait"
-            },
-            /* Запрещаем разбивать контент на страницы */
-            pagebreak: { mode: "avoid-all" }
+        /* ── 1. Сохраняем текущие стили ── */
+        const saved = {
+            width:      area.style.width,
+            maxWidth:   area.style.maxWidth,
+            minWidth:   area.style.minWidth,
+            background: area.style.background,
+            padding:    area.style.padding,
+            position:   area.style.position,
+            left:       area.style.left,
+            top:        area.style.top
         };
 
+        /* ── 2. Фиксируем ширину 800 px вне зависимости от экрана ──
+               position:absolute убирает элемент из потока,
+               поэтому мобильный скролл не влияет на снимок          */
+        Object.assign(area.style, {
+            width:      "800px",
+            maxWidth:   "800px",
+            minWidth:   "800px",
+            background: "#ffffff",
+            padding:    "28px 36px 36px",
+            position:   "absolute",
+            left:       "-9999px",
+            top:        "0"
+        });
+
+        /* ── 3. Показываем футер с реквизитами, прячем кнопки ── */
+        footer.style.display = "flex";
+        document.querySelectorAll(".no-print").forEach(el => el.style.visibility = "hidden");
+
+        /* Пауза — браузер перерисовывает layout с новыми стилями */
+        await new Promise(r => setTimeout(r, 120));
+
         try {
-            await html2pdf().set(opt).from(area).save();
+            /* ── 4. Снимаем canvas с фиксированной шириной окна 800 px ── */
+            const canvas = await html2canvas(area, {
+                scale:           2,
+                useCORS:         true,
+                logging:         false,
+                scrollX:         0,
+                scrollY:         0,
+                windowWidth:     800,
+                backgroundColor: "#ffffff"
+            });
+
+            /* ── 5. Вписываем весь canvas в ОДНУ страницу ──
+                   Если контент длиннее A4 — страница растягивается по высоте */
+            const { jsPDF } = window.jspdf;
+
+            const pxW      = canvas.width;
+            const pxH      = canvas.height;
+            const marginMm = 10;
+            const pageW    = 210;
+            const contentW = pageW - marginMm * 2;
+            const contentH = (pxH / pxW) * contentW;
+            const docH     = Math.max(297, contentH + marginMm * 2);
+
+            const pdf = new jsPDF({
+                unit:        "mm",
+                format:      [pageW, docH],
+                orientation: "portrait",
+                compress:    true
+            });
+
+            pdf.addImage(canvas.toDataURL("image/jpeg", 0.97), "JPEG", marginMm, marginMm, contentW, contentH);
+            pdf.save("КП_Robokassa.pdf");
+
         } finally {
-            /* 4. Восстанавливаем всё обратно */
-            area.style.width      = prevWidth;
-            area.style.maxWidth   = prevMaxWidth;
-            area.style.background = prevBg;
-            area.style.padding    = prevPadding;
-
-            footer.style.display  = "none";
-            document.querySelectorAll(".no-print").forEach(el => el.style.display = "");
-
+            /* ── 6. Возвращаем всё в исходное состояние ── */
+            Object.assign(area.style, saved);
+            footer.style.display = "none";
+            document.querySelectorAll(".no-print").forEach(el => el.style.visibility = "");
             btn.disabled  = false;
             btn.innerText = "↓ Скачать КП в PDF";
         }
