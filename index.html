@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор конверсии</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f7f6; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .calculator { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            width: 100%; 
+            max-width: 400px; 
+        }
+        h2 { 
+            text-align: center; 
+            color: #333; 
+            margin-top: 0; 
+            margin-bottom: 25px;
+        }
+        .input-group { 
+            margin-bottom: 15px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            color: #666; 
+            font-size: 14px; 
+        }
+        input { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            font-size: 16px; 
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #1a73e8;
+        }
+        .result { 
+            margin-top: 25px; 
+            padding: 15px; 
+            background-color: #e8f0fe; 
+            border-radius: 6px; 
+            text-align: center; 
+            font-size: 18px; 
+            color: #1a73e8; 
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <h2>Расчет конверсии</h2>
+        
+        <div class="input-group">
+            <label>Трафик (посетители):</label>
+            <input type="number" id="traffic" value="1000" oninput="calculate()">
+        </div>
+        
+        <div class="input-group">
+            <label>Конверсия в продажу (%):</label>
+            <input type="number" id="conversion" value="5" oninput="calculate()">
+        </div>
+        
+        <div class="input-group">
+            <label>Средний чек (₽):</label>
+            <input type="number" id="avgCheck" value="5000" oninput="calculate()">
+        </div>
+        
+        <div class="result" id="totalResult">
+            Количество продаж: 50<br>
+            <strong>Выручка: 250 000 ₽</strong>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            // Получаем данные из полей
+            const traffic = document.getElementById('traffic').value;
+            const conversion = document.getElementById('conversion').value;
+            const avgCheck = document.getElementById('avgCheck').value;
+
+            // Считаем формулы
+            const sales = (traffic * (conversion / 100));
+            const revenue = sales * avgCheck;
+
+            // Выводим результат
+            document.getElementById('totalResult').innerHTML =
+                'Количество продаж: ' + Math.round(sales) + '<br>' +
+                '<strong>Выручка: ' + revenue.toLocaleString('ru-RU') + ' ₽</strong>';
+        }
+        
+        // Запускаем расчет сразу при открытии
+        calculate();
+    </script>
+
+</body>
+</html>
