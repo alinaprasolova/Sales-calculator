@@ -7,8 +7,7 @@
 
     <link rel="icon" type="image/png" href="v-rk-32.png">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,6 +16,7 @@
     <style>
         :root {
             --rk-blue:        #525FFB;
+            --rk-blue-hover:  #3D49F0;
             --rk-blue-light:  #EEEEFF;
             --rk-dark:        #000000;
             --rk-text:        #1A1A1A;
@@ -36,73 +36,47 @@
             font-family: var(--rk-font);
             background: var(--rk-bg);
             color: var(--rk-text);
-            padding: 40px 16px; /* Чуть меньше отступы для мобилок */
+            padding: 40px 16px;
             -webkit-font-smoothing: antialiased;
         }
 
-        .capture-area {
+        .container {
             max-width: 860px;
             margin: 0 auto;
-            background: var(--rk-bg);
-            padding: 10px;
-            border-radius: var(--rk-radius);
+            display: flex;
+            flex-direction: column;
         }
 
         .rk-header {
             display: flex;
             justify-content: flex-start;
             margin-bottom: 24px;
+            width: 100%;
         }
         .rk-logo { height: 16px; width: auto; }
 
-        .calc-title { text-align: center; margin-bottom: 32px; }
+        .calc-title { text-align: center; margin-bottom: 32px; width: 100%; }
         .calc-title h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--rk-dark); }
         .calc-title p { font-size: 15px; color: var(--rk-muted); }
 
-        .section { 
-            background: var(--rk-white); 
-            border: 1px solid var(--rk-border); 
-            border-radius: var(--rk-radius); 
-            padding: 24px; 
-            margin-bottom: 16px; 
-        }
-        
+        .section { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 24px; margin-bottom: 16px; }
         h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--rk-muted); margin-bottom: 20px; letter-spacing: 0.5px; }
 
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .grid-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .grid-inputs, .grid-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-cards { margin-bottom: 16px; }
 
-        .card { 
-            background: var(--rk-white); 
-            border: 1px solid var(--rk-border); 
-            border-radius: var(--rk-radius); 
-            padding: 24px; 
-        }
+        .card { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 24px; }
         .card.robo { border-top: 3px solid var(--rk-blue); }
         .card.robo h3 { color: var(--rk-blue); }
         .card.comp { border-top: 3px solid var(--rk-border); }
 
         .input-group { margin-bottom: 12px; }
         label { display: block; font-size: 11px; font-weight: 500; color: var(--rk-muted); margin-bottom: 6px; }
-        input { 
-            width: 100%; 
-            padding: 10px; 
-            border: 1.5px solid var(--rk-border); 
-            border-radius: 8px; 
-            background: var(--rk-bg); 
-            font-family: var(--rk-font); 
-            font-size: 14px; 
-            font-weight: 500;
-        }
+        input { width: 100%; padding: 10px; border: 1.5px solid var(--rk-border); border-radius: 8px; background: var(--rk-bg); font-family: var(--rk-font); font-size: 14px; font-weight: 500; }
 
-        .btn-calc-wrap { display: flex; justify-content: center; margin: 24px 0; }
-        .btn-main { 
-            width: 100%; max-width: 300px; 
-            background: var(--rk-blue); color: #fff; 
-            border: none; padding: 14px; 
-            font-size: 16px; font-weight: 600; 
-            border-radius: 10px; cursor: pointer; 
-        }
+        .btn-calc-wrap { display: flex; justify-content: center; margin: 24px 0; width: 100%; }
+        .btn-main { width: 100%; max-width: 300px; background: var(--rk-blue); color: #fff; border: none; padding: 14px; font-size: 16px; font-weight: 600; border-radius: 10px; cursor: pointer; }
+        .btn-main:hover { background: var(--rk-blue-hover); }
 
         .results { background: var(--rk-white); border: 1px solid var(--rk-border); border-radius: var(--rk-radius); padding: 24px; }
         .res-table { width: 100%; border-collapse: collapse; }
@@ -111,118 +85,96 @@
         .res-table td:first-child { text-align: left; color: var(--rk-muted); }
         .res-table tr.highlight { background: var(--rk-blue-light); color: var(--rk-blue); font-weight: 700; }
 
-        .profit-box { 
-            margin-top: 20px; padding: 16px; 
-            border-radius: 12px; background: var(--rk-success-bg); 
-            color: var(--rk-success); text-align: center; 
-            border: 1.5px solid #B2ECDA; 
-        }
+        .profit-box { margin-top: 20px; padding: 16px; border-radius: 12px; background: var(--rk-success-bg); color: var(--rk-success); text-align: center; border: 1.5px solid #B2ECDA; }
         .profit-main { font-size: 19px; font-weight: 700; }
 
-        .btn-pdf { 
-            display: block; width: 100%; max-width: 300px; 
-            margin: 20px auto 0; padding: 12px; 
-            border: 1.5px solid var(--rk-blue); 
-            background: none; color: var(--rk-blue); 
-            font-weight: 600; border-radius: 10px; cursor: pointer; 
-        }
+        .btn-pdf { display: block; width: 100%; max-width: 300px; margin: 20px auto 0; padding: 12px; border: 1.5px solid var(--rk-blue); background: none; color: var(--rk-blue); font-weight: 600; border-radius: 10px; cursor: pointer; }
 
-        /* ИСПРАВЛЕННЫЙ НИЗ (ФУТЕР) */
-        .pdf-footer {
-            display: none; /* Скрыт на сайте */
-            padding-top: 20px;
-            margin-top: 30px;
-            border-top: 1px solid var(--rk-border);
-        }
-        .footer-cols {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            font-size: 10px;
-            color: var(--rk-muted);
-            line-height: 1.4;
-        }
+        /* ФУТЕР ДЛЯ PDF */
+        .pdf-footer { display: none; padding-top: 20px; margin-top: 30px; border-top: 1px solid var(--rk-border); }
+        .footer-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; font-size: 10px; color: var(--rk-muted); line-height: 1.4; }
 
         @media (max-width: 640px) {
             .grid-inputs, .grid-cards { grid-template-columns: 1fr; }
             .rk-logo { height: 14px; }
-            .calc-title h1 { font-size: 22px; }
         }
 
-        /* Стиль для режима PDF */
-        .pdf-only { background: #fff !important; padding: 15mm !important; }
+        /* Стиль для режима PDF (чтобы не ехало) */
+        .pdf-mode { background: #fff !important; width: 800px !important; padding: 40px !important; }
     </style>
 </head>
 <body>
 
-<div id="capture-area" class="capture-area">
+<div id="capture-area">
     <header class="rk-header">
         <img src="logo_robokassa_black.png" alt="Robokassa" class="rk-logo">
     </header>
 
-    <div class="calc-title">
-        <h1>Калькулятор выгоды компании</h1>
-        <p>Сравните условия и узнайте свою реальную выгоду</p>
-    </div>
-
-    <div class="section">
-        <h3>Вводные данные (в месяц)</h3>
-        <div class="grid-inputs">
-            <div class="input-group"><label>Оборот ( месяц ), ₽</label><input type="number" id="turnover" value="2000000"></div>
-            <div class="input-group"><label>Средний чек, ₽</label><input type="number" id="avgCheck" value="6000"></div>
-            <div class="input-group"><label>Доля оплат Картами РФ, %</label><input type="number" id="shareCard" value="70"></div>
-            <div class="input-group"><label>Доля оплат через СБП, %</label><input type="number" id="shareSbp" value="50"></div>
-        </div>
-    </div>
-
-    <div class="grid-cards">
-        <div class="card robo">
-            <h3>Условия Robokassa</h3>
-            <div class="input-group"><label>Конверсия, %</label><input type="number" id="convRobo" value="98"></div>
-            <div class="input-group"><label>Ставка: Карты РФ, %</label><input type="number" id="rateCardRobo" value="3.9" step="0.1"></div>
-            <div class="input-group"><label>Ставка: СБП, %</label><input type="number" id="rateSbpRobo" value="2.7" step="0.1"></div>
-        </div>
-        <div class="card comp">
-            <h3>Текущий эквайринг</h3>
-            <div class="input-group"><label>Конверсия, %</label><input type="number" id="convComp" value="90"></div>
-            <div class="input-group"><label>Ставка: Карты РФ, %</label><input type="number" id="rateCardComp" value="3.5" step="0.1"></div>
-            <div class="input-group"><label>Ставка: СБП, %</label><input type="number" id="rateSbpComp" value="3.5" step="0.1"></div>
-        </div>
-    </div>
-
-    <div class="btn-calc-wrap no-print">
-        <button class="btn-main" onclick="calculate()">Рассчитать выгоду</button>
-    </div>
-
-    <div class="results">
-        <h3>Сравнение результатов</h3>
-        <table class="res-table">
-            <thead>
-                <tr><th>Показатель</th><th style="color:var(--rk-blue)">Robokassa</th><th>Текущий эквайринг</th></tr>
-            </thead>
-            <tbody id="table-body">
-                <tr><td>Успешных операций, шт.</td><td id="resOpsRobo">0</td><td id="resOpsComp">0</td></tr>
-                <tr><td>Оборот в месяц, ₽</td><td id="resPayRobo">0</td><td id="resPayComp">0</td></tr>
-                <tr><td>Затраты на комиссию, ₽</td><td id="resFeeRobo">0</td><td id="resFeeComp">0</td></tr>
-                <tr class="highlight"><td>Прибыль компании (в мес.), ₽</td><td id="resProfitRobo">0</td><td id="resProfitComp">0</td></tr>
-            </tbody>
-        </table>
-
-        <div class="profit-box" id="profit-box">
-            <div class="profit-main" id="profit-main">✦ Дополнительная прибыль: 0 ₽</div>
-            <div style="font-size:13px; margin-top:4px;" id="profit-year">или 0 ₽ в год</div>
+    <div class="container">
+        <div class="calc-title">
+            <h1>Калькулятор выгоды компании</h1>
+            <p>Сравните условия и узнайте свою реальную выгоду</p>
         </div>
 
-        <button class="btn-pdf no-print" id="pdf-btn" onclick="generatePDF()">↓ Скачать КП в PDF</button>
-    </div>
-
-    <footer class="pdf-footer" id="pdf-footer">
-        <div class="footer-cols">
-            <div><strong>ООО «РОБОКАССА»</strong><br>5047063929 / 771601001</div>
-            <div style="text-align:center;">115054, г. Москва,<br>Стремянный переулок д. 26</div>
-            <div style="text-align:right;">8 (499) 110-57-25<br>robokassa.com</div>
+        <div class="section">
+            <h3>Вводные данные (в месяц)</h3>
+            <div class="grid-inputs">
+                <div class="input-group"><label>Оборот ( месяц ), ₽</label><input type="number" id="turnover" value="2000000"></div>
+                <div class="input-group"><label>Средний чек, ₽</label><input type="number" id="avgCheck" value="6000"></div>
+                <div class="input-group"><label>Доля оплат Картами РФ, %</label><input type="number" id="shareCard" value="70"></div>
+                <div class="input-group"><label>Доля оплат через СБП, %</label><input type="number" id="shareSbp" value="50"></div>
+            </div>
         </div>
-    </footer>
+
+        <div class="grid-cards">
+            <div class="card robo">
+                <h3>Условия Robokassa</h3>
+                <div class="input-group"><label>Конверсия, %</label><input type="number" id="convRobo" value="98"></div>
+                <div class="input-group"><label>Ставка: Карты РФ, %</label><input type="number" id="rateCardRobo" value="3.9" step="0.1"></div>
+                <div class="input-group"><label>Ставка: СБП, %</label><input type="number" id="rateSbpRobo" value="2.7" step="0.1"></div>
+            </div>
+            <div class="card comp">
+                <h3>Текущий эквайринг</h3>
+                <div class="input-group"><label>Конверсия, %</label><input type="number" id="convComp" value="90"></div>
+                <div class="input-group"><label>Ставка: Карты РФ, %</label><input type="number" id="rateCardComp" value="3.5" step="0.1"></div>
+                <div class="input-group"><label>Ставка: СБП, %</label><input type="number" id="rateSbpComp" value="3.5" step="0.1"></div>
+            </div>
+        </div>
+
+        <div class="btn-calc-wrap no-print">
+            <button class="btn-main" onclick="calculate()">Рассчитать выгоду</button>
+        </div>
+
+        <div class="results">
+            <h3>Сравнение результатов</h3>
+            <table class="res-table">
+                <thead>
+                    <tr><th>Показатель</th><th style="color:var(--rk-blue)">Robokassa</th><th>Текущий эквайринг</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Успешных операций, шт.</td><td id="resOpsRobo">0</td><td id="resOpsComp">0</td></tr>
+                    <tr><td>Оборот в месяц, ₽</td><td id="resPayRobo">0</td><td id="resPayComp">0</td></tr>
+                    <tr><td>Затраты на комиссию, ₽</td><td id="resFeeRobo">0</td><td id="resFeeComp">0</td></tr>
+                    <tr class="highlight"><td>Прибыль компании (в мес.), ₽</td><td id="resProfitRobo">0</td><td id="resProfitComp">0</td></tr>
+                </tbody>
+            </table>
+
+            <div class="profit-box">
+                <div class="profit-main" id="profit-main">✦ Дополнительная прибыль: 0 ₽</div>
+                <div style="font-size:13px; margin-top:4px;" id="profit-year">или 0 ₽ в год</div>
+            </div>
+
+            <button class="btn-pdf no-print" id="pdf-btn" onclick="generatePDF()">↓ Скачать КП в PDF</button>
+        </div>
+
+        <footer class="pdf-footer" id="pdf-footer">
+            <div class="footer-cols">
+                <div><strong>ООО «РОБОКАССА»</strong><br>ИНН 5047063929 / КПП 771601001</div>
+                <div style="text-align:center;">115054, г. Москва,<br>Стремянный переулок д. 26</div>
+                <div style="text-align:right;">8 (499) 110-57-25<br>robokassa.com</div>
+            </div>
+        </footer>
+    </div>
 </div>
 
 <script>
@@ -259,18 +211,19 @@
     }
 
     async function generatePDF() {
+        const btn = document.getElementById('pdf-btn');
         const area = document.getElementById('capture-area');
         const footer = document.getElementById('pdf-footer');
-        const btn = document.getElementById('pdf-btn');
 
         btn.innerText = "Генерация...";
         footer.style.display = "block";
         
-        // Скрываем кнопки
-        document.querySelectorAll('.no-print').forEach(el => el.style.display = 'none');
+        // Скрываем кнопки через класс no-print
+        const noPrintElements = document.querySelectorAll('.no-print');
+        noPrintElements.forEach(el => el.style.display = 'none');
 
         const opt = {
-            margin: 10,
+            margin: 0,
             filename: 'КП_Robokassa.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true, windowWidth: 800 },
@@ -279,9 +232,12 @@
 
         try {
             await html2pdf().set(opt).from(area).save();
+        } catch (e) {
+            console.error(e);
+            alert("Ошибка при скачивании. Попробуйте еще раз.");
         } finally {
             footer.style.display = "none";
-            document.querySelectorAll('.no-print').forEach(el => el.style.display = 'block');
+            noPrintElements.forEach(el => el.style.display = 'block');
             btn.innerText = "↓ Скачать КП в PDF";
         }
     }
